@@ -9,12 +9,13 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "book_loans")
+@Table(name = "book_reservations")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookLoan {
+public class BookReservation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,13 +29,11 @@ public class BookLoan {
     private Book book;
 
     @Column()
-    private LocalDateTime loanDate;
+    private LocalDateTime reservationDate;
 
     @Column()
-    private LocalDateTime dueDate;
-
-    private LocalDateTime returnDate;
+    private LocalDateTime expirationDate;
 
     @Column()
-    private boolean returned;
+    private boolean active;
 }
