@@ -1,8 +1,9 @@
 package org.example.service;
 
-// COMMIT 7: Service Layer - Implementations
 import org.example.entity.Book;
+import org.example.repository.BookLoanRepository;
 import org.example.repository.BookRepository;
+import org.example.repository.BookReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +11,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class BookService  {
 
     private BookRepository bookRepository;
+    private BookLoanRepository bookLoanRepository;
+    private BookReservationRepository bookReservationRepository;
+
+    public BookService(BookRepository bookRepository,
+                           BookLoanRepository bookLoanRepository,
+                           BookReservationRepository bookReservationRepository) {
+        this.bookRepository = bookRepository;
+        this.bookLoanRepository = bookLoanRepository;
+        this.bookReservationRepository = bookReservationRepository;
+    }
 
     public Book addBook(Book book) {
         if (book.getAvailableQuantity() == null) {
