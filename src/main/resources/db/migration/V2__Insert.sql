@@ -1,8 +1,8 @@
 INSERT INTO users (username, password, email, role)
-VALUES ('admin', 'admin', 'admin@gmail.com', 'ADMIN');
+VALUES ('admin', '$2a$12$0m7puby1aJ7hFC2i0yb4euV7dofmH30zokXeOsDWLoAI03ipuZE9S', 'admin@gmail.com', 'ADMIN');
 
 INSERT INTO users (username, password, email, role)
-VALUES ('user', 'user', 'user@gmail.com', 'USER');
+VALUES ('user', '$2a$12$0m7puby1aJ7hFC2i0yb4euV7dofmH30zokXeOsDWLoAI03ipuZE9S', 'user@gmail.com', 'USER');
 
 INSERT INTO books (title, author, description, quantity, available_quantity)
 VALUES
