@@ -21,7 +21,7 @@ public interface BookReservationRepository extends JpaRepository<BookReservation
     
     List<BookReservation> findByBookAndActive(Book book, boolean active);
     
-    @Query("SELECT r FROM BookReservation r WHERE r.active = true AND r.expirationDate < :now")
+    @Query("SELECT r FROM BookReservation r WHERE r.expirationDate < :now")
     List<BookReservation> findExpiredReservations(@Param("now") LocalDateTime now);
     
     @Query("SELECT COUNT(r) FROM BookReservation r WHERE r.book = :book AND r.active = true")

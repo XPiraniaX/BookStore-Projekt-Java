@@ -1,5 +1,8 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Book;
 import org.example.service.BookService;
@@ -15,12 +18,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/books")
+@Tag(name = "Book Controller")
 @RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
 
-    @PostMapping
+    @PostMapping("/add")
+    @Operation(summary = "Create new book", description = "Adds new book to database")
     public ResponseEntity<?> addBook(@Valid @RequestBody Book book) {
         try {
             Book savedBook = bookService.addBook(book);
@@ -32,8 +37,9 @@ public class BookController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getBookById(@PathVariable Long id) {
+    @GetMapping("/get/{id}")
+    @Operation (summary = "Get book by id", description = "Returns book with assigned id")
+    public ResponseEntity<?> getBookById(@Parameter(description="ID of the book",required = true)@PathVariable Long id) {
         Optional<Book> bookOptional = bookService.findById(id);
         if (bookOptional.isPresent()) {
             return ResponseEntity.ok(bookOptional.get());
@@ -44,32 +50,37 @@ public class BookController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/all")
+    @Operation (summary = "Get all books", description = "Returns list of all books in database")
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookService.findAllBooks();
         return ResponseEntity.ok(books);
     }
 
     @GetMapping("/available")
+    @Operation (summary = "Get available book", description = "Returns list of all available books in database")
     public ResponseEntity<List<Book>> getAvailableBooks() {
         List<Book> books = bookService.findAvailableBooks();
         return ResponseEntity.ok(books);
     }
 
-    @GetMapping("/title/{title}")
-    public ResponseEntity<List<Book>> getBooksByTitle(@PathVariable String title) {
+    @GetMapping("/get_title/{title}")
+    @Operation (summary = "Get books by title", description = "Returns list of all books with matching title")
+    public ResponseEntity<List<Book>> getBooksByTitle(@Parameter (description="Title of the book",required = true)@PathVariable String title) {
         List<Book> books = bookService.findByTitle(title);
         return ResponseEntity.ok(books);
     }
 
-    @GetMapping("/author/{author}")
-    public ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable String author) {
+    @GetMapping("/get_author/{author}")
+    @Operation (summary = "Get books by author", description = "Returns list of all books with matching author")
+    public ResponseEntity<List<Book>> getBooksByAuthor(@Parameter (description="Author of the books",required = true) @PathVariable String author) {
         List<Book> books = bookService.findByAuthor(author);
         return ResponseEntity.ok(books);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody Book book) {
+    @PutMapping("/update/{id}")
+    @Operation (summary = "Update book by id", description = "Updates information in database about book with matching id")
+    public ResponseEntity<?> updateBook( @Parameter (description="ID of the book",required = true) @PathVariable Long id, @Valid @RequestBody Book book) {
         try {
             book.setId(id);
             Book updatedBook = bookService.updateBook(book);
@@ -81,8 +92,9 @@ public class BookController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    @Operation (summary = "Delete book by id", description = "Deletes information in database about book with matching id")
+    public ResponseEntity<?> deleteBook(@Parameter (description="ID of the book",required = true) @PathVariable Long id) {
         try {
             bookService.deleteBook(id);
             return ResponseEntity.noContent().build();
@@ -93,8 +105,9 @@ public class BookController {
         }
     }
 
-    @GetMapping("/{id}/available")
-    public ResponseEntity<?> isBookAvailable(@PathVariable Long id) {
+    @GetMapping("/available_id/{id}")
+    @Operation (summary = "Check if book is available by id", description = "Returns availabity of book by id")
+    public ResponseEntity<?> isBookAvailable(@Parameter (description="ID of the book",required = true) @PathVariable Long id) {
         try {
             boolean isAvailable = bookService.isBookAvailable(id);
             Map<String, Boolean> response = new HashMap<>();
@@ -107,8 +120,9 @@ public class BookController {
         }
     }
 
-    @GetMapping("/{id}/quantity")
-    public ResponseEntity<?> getAvailableQuantity(@PathVariable Long id) {
+    @GetMapping("/quantity/{id}")
+    @Operation (summary = "Check quantity of the book by id", description = "Returns quantity of the book in database by id")
+    public ResponseEntity<?> getAvailableQuantity(@Parameter (description="ID of the book",required = true) @PathVariable Long id) {
         try {
             int quantity = bookService.getAvailableQuantity(id);
             Map<String, Integer> response = new HashMap<>();

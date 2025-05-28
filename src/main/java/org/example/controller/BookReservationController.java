@@ -1,7 +1,11 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Book;
+import org.example.entity.BookLoan;
 import org.example.entity.BookReservation;
 import org.example.entity.User;
 import org.example.service.BookReservationService;
@@ -20,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/reservations")
+@Tag(name = "Book Reservation Controller")
 @RequiredArgsConstructor
 public class BookReservationController {
 
@@ -27,11 +32,12 @@ public class BookReservationController {
     private final UserService userService;
     private final BookService bookService;
 
-    @PostMapping
+    @PostMapping("/add")
+    @Operation(summary = "Create new reservation", description = "Adds new reservation to database")
     public ResponseEntity<?> createReservation(
-            @RequestParam Long userId,
-            @RequestParam Long bookId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime expirationDate) {
+            @Parameter(description="ID of the user",required = true) @RequestParam Long userId,
+            @Parameter (description="ID of the book",required = true) @RequestParam Long bookId,
+            @Parameter (description="Reservation expiration date",required = true)@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime expirationDate) {
         try {
             BookReservation reservation = bookReservationService.createReservation(userId, bookId, expirationDate);
             return ResponseEntity.status(HttpStatus.CREATED).body(reservation);
@@ -42,8 +48,9 @@ public class BookReservationController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getReservationById(@PathVariable Long id) {
+    @GetMapping("/get/{id}")
+    @Operation(summary = "Get reservation by id", description = "Returns reservation with assigned id")
+    public ResponseEntity<?> getReservationById(@Parameter(description="ID of the reservation",required = true)@PathVariable Long id) {
         Optional<BookReservation> reservationOptional = bookReservationService.findById(id);
         if (reservationOptional.isPresent()) {
             return ResponseEntity.ok(reservationOptional.get());
@@ -54,8 +61,9 @@ public class BookReservationController {
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getReservationsByUser(@PathVariable Long userId) {
+    @GetMapping("/get_user/{userId}")
+    @Operation(summary = "Get reservation by id of assigned user", description = "Returns reservation with assigned id of the user")
+    public ResponseEntity<?> getReservationsByUser(@Parameter(description="ID of the user",required = true) @PathVariable Long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (userOptional.isPresent()) {
             List<BookReservation> reservations = bookReservationService.findByUser(userOptional.get());
@@ -67,8 +75,9 @@ public class BookReservationController {
         }
     }
 
-    @GetMapping("/book/{bookId}")
-    public ResponseEntity<?> getReservationsByBook(@PathVariable Long bookId) {
+    @GetMapping("/get_book/{bookId}")
+    @Operation(summary = "Get reservation by id of assigned book", description = "Returns reservation with assigned id of the book")
+    public ResponseEntity<?> getReservationsByBook(@Parameter(description="ID of the book",required = true)@PathVariable Long bookId) {
         Optional<Book> bookOptional = bookService.findById(bookId);
         if (bookOptional.isPresent()) {
             List<BookReservation> reservations = bookReservationService.findByBook(bookOptional.get());
@@ -80,8 +89,9 @@ public class BookReservationController {
         }
     }
 
-    @GetMapping("/active/user/{userId}")
-    public ResponseEntity<?> getActiveReservationsByUser(@PathVariable Long userId) {
+    @GetMapping("/active_user/{userId}")
+    @Operation(summary = "Get active reservations for the user with assigend id", description = "Returns list of active reservations for the user by id")
+    public ResponseEntity<?> getActiveReservationsByUser(@Parameter(description="ID of the user",required = true) @PathVariable Long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (userOptional.isPresent()) {
             List<BookReservation> reservations = bookReservationService.findActiveReservationsByUser(userOptional.get());
@@ -93,8 +103,9 @@ public class BookReservationController {
         }
     }
 
-    @GetMapping("/active/book/{bookId}")
-    public ResponseEntity<?> getActiveReservationsByBook(@PathVariable Long bookId) {
+    @GetMapping("/active_book/{bookId}")
+    @Operation(summary = "Get active reservations for the book with assigend id", description = "Returns list of active reservations for the book by id")
+    public ResponseEntity<?> getActiveReservationsByBook(@Parameter(description="ID of the book",required = true) @PathVariable Long bookId) {
         Optional<Book> bookOptional = bookService.findById(bookId);
         if (bookOptional.isPresent()) {
             List<BookReservation> reservations = bookReservationService.findActiveReservationsByBook(bookOptional.get());
@@ -106,20 +117,32 @@ public class BookReservationController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/all")
+    @Operation(summary = "Get all reservations", description = "Returns list of all reservations")
     public ResponseEntity<List<BookReservation>> getAllReservations() {
-        List<BookReservation> reservations = bookReservationService.findAllReservations();
+        List<BookReservation> reservation = bookReservationService.findAllReservations();
+        return ResponseEntity.ok(reservation);
+    }
+
+    @GetMapping("/active")
+    @Operation(summary = "Get all active reservations", description = "Returns list of active reservations")
+    public ResponseEntity<List<BookReservation>> getActiveReservations() {
+        List<BookReservation> reservations = bookReservationService.findAllReservations().stream()
+                .filter(BookReservation::isActive)
+                .collect(java.util.stream.Collectors.toList());
         return ResponseEntity.ok(reservations);
     }
 
     @GetMapping("/expired")
+    @Operation(summary = "Get all expired reservations", description = "Returns list of all expired reservations")
     public ResponseEntity<List<BookReservation>> getExpiredReservations() {
         List<BookReservation> reservations = bookReservationService.findExpiredReservations();
         return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelReservation(@PathVariable Long id) {
+    @PostMapping("/cancel/{id}")
+    @Operation(summary = "Cancels reservation for the book by id of the reservation", description = "Sets the reservation as inactive by id")
+    public ResponseEntity<?> cancelReservation(@Parameter(description="ID of the reservation",required = true) @PathVariable Long id) {
         try {
             bookReservationService.cancelReservation(id);
             return ResponseEntity.ok().build();
@@ -130,7 +153,8 @@ public class BookReservationController {
         }
     }
 
-    @PostMapping("/process-expired")
+    @PostMapping("/process_expired")
+    @Operation(summary = "Cancels expired reservations", description = "Using cancel system on overdue reservations")
     public ResponseEntity<?> processExpiredReservations() {
         try {
             bookReservationService.processExpiredReservations();

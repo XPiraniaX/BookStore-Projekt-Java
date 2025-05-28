@@ -1,5 +1,8 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.User;
 import org.example.service.UserService;
@@ -15,13 +18,15 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "User Controller")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    @GetMapping("/get/{id}")
+    @Operation(summary = "Get user by id",description = "Returns user with assigned id")
+    public ResponseEntity<?> getUserById(@Parameter(description = "ID of the user",required = true) @PathVariable Long id) {
         Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -34,8 +39,9 @@ public class UserController {
         }
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+    @GetMapping("/get_username/{username}")
+    @Operation(summary = "Get user by username",description = "Returns user with assigned username")
+    public ResponseEntity<?> getUserByUsername(@Parameter(description = "Username of the user",required = true)@PathVariable String username) {
         Optional<User> userOptional = userService.findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -48,16 +54,18 @@ public class UserController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/all")
+    @Operation(summary = "Get all users",description = "Returns list of all users in database")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAllUsers();
-        // Don't expose passwords
+
         users.forEach(user -> user.setPassword(null));
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody User user) {
+    @PutMapping("/update/{id}")
+    @Operation(summary = "Update user by id",description = "Updates information in database about user witch matching id")
+    public ResponseEntity<?> updateUser(@Parameter(description = "ID of the user",required = true) @PathVariable Long id, @Valid @RequestBody User user) {
         try {
             user.setId(id);
             User updatedUser = userService.updateUser(user);
@@ -70,8 +78,9 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete user by id",description = "Deletes information in database about user with matching id")
+    public ResponseEntity<?> deleteUser(@Parameter(description = "ID of the user",required = true) @PathVariable Long id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.noContent().build();
@@ -82,16 +91,18 @@ public class UserController {
         }
     }
 
-    @GetMapping("/exists/username/{username}")
-    public ResponseEntity<?> existsByUsername(@PathVariable String username) {
+    @GetMapping("/exists_username/{username}")
+    @Operation(summary = "Chcecks if user exists by username ",description = "Returns existence of the user by id")
+    public ResponseEntity<?> existsByUsername(@Parameter(description = "ID of the user",required = true) @PathVariable String username) {
         boolean exists = userService.existsByUsername(username);
         Map<String, Boolean> response = new HashMap<>();
         response.put("exists", exists);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/exists/email/{email}")
-    public ResponseEntity<?> existsByEmail(@PathVariable String email) {
+    @GetMapping("/exists_email/{email}")
+    @Operation(summary = "Chcecks if user exists by email",description = "Returns existence of the user by email")
+    public ResponseEntity<?> existsByEmail(@Parameter(description = "ID of the user",required = true) @PathVariable String email) {
         boolean exists = userService.existsByEmail(email);
         Map<String, Boolean> response = new HashMap<>();
         response.put("exists", exists);

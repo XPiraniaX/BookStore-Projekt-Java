@@ -1,5 +1,8 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Book;
 import org.example.entity.BookLoan;
@@ -20,6 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/loans")
+@Tag(name = "Book Loan Controller")
 @RequiredArgsConstructor
 public class BookLoanController {
 
@@ -27,11 +31,12 @@ public class BookLoanController {
     private final UserService userService;
     private final BookService bookService;
 
-    @PostMapping
+    @PostMapping("/add")
+    @Operation(summary = "Create new loan", description = "Adds new loan to database")
     public ResponseEntity<?> createLoan(
-            @RequestParam Long userId,
-            @RequestParam Long bookId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dueDate) {
+            @Parameter(description="ID of the user",required = true) @RequestParam Long userId,
+            @Parameter (description="ID of the book",required = true) @RequestParam Long bookId,
+            @Parameter (description="Due date",required = true) @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dueDate) {
         try {
             BookLoan loan = bookLoanService.createLoan(userId, bookId, dueDate);
             return ResponseEntity.status(HttpStatus.CREATED).body(loan);
@@ -42,8 +47,9 @@ public class BookLoanController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getLoanById(@PathVariable Long id) {
+    @GetMapping("/get/{id}")
+    @Operation(summary = "Get loan by id", description = "Returns loan with assigned id")
+    public ResponseEntity<?> getLoanById(@Parameter(description="ID of the loan",required = true)@PathVariable Long id) {
         Optional<BookLoan> loanOptional = bookLoanService.findById(id);
         if (loanOptional.isPresent()) {
             return ResponseEntity.ok(loanOptional.get());
@@ -54,8 +60,9 @@ public class BookLoanController {
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getLoansByUser(@PathVariable Long userId) {
+    @GetMapping("/get_user/{userId}")
+    @Operation(summary = "Get loan by id of assigned user", description = "Returns loan with assigned id of the user")
+    public ResponseEntity<?> getLoansByUser(@Parameter(description="ID of the user",required = true) @PathVariable Long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (userOptional.isPresent()) {
             List<BookLoan> loans = bookLoanService.findByUser(userOptional.get());
@@ -67,8 +74,9 @@ public class BookLoanController {
         }
     }
 
-    @GetMapping("/book/{bookId}")
-    public ResponseEntity<?> getLoansByBook(@PathVariable Long bookId) {
+    @GetMapping("/get_book/{bookId}")
+    @Operation(summary = "Get loan by id of assigned book", description = "Returns loan with assigned id of the book")
+    public ResponseEntity<?> getLoansByBook(@Parameter(description="ID of the book",required = true) @PathVariable Long bookId) {
         Optional<Book> bookOptional = bookService.findById(bookId);
         if (bookOptional.isPresent()) {
             List<BookLoan> loans = bookLoanService.findByBook(bookOptional.get());
@@ -81,13 +89,15 @@ public class BookLoanController {
     }
 
     @GetMapping("/active")
+    @Operation(summary = "Get loans by active status", description = "Returns list of active loans")
     public ResponseEntity<List<BookLoan>> getActiveLoans() {
         List<BookLoan> loans = bookLoanService.findActiveLoans();
         return ResponseEntity.ok(loans);
     }
 
-    @GetMapping("/active/user/{userId}")
-    public ResponseEntity<?> getActiveLoansForUser(@PathVariable Long userId) {
+    @GetMapping("/active_user/{userId}")
+    @Operation(summary = "Get active loans for the user with assigend id", description = "Returns list of active loans for the user by id")
+    public ResponseEntity<?> getActiveLoansForUser(@Parameter(description="ID of the user",required = true)@PathVariable Long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (userOptional.isPresent()) {
             List<BookLoan> loans = bookLoanService.findActiveLoansForUser(userOptional.get());
@@ -99,8 +109,9 @@ public class BookLoanController {
         }
     }
 
-    @GetMapping("/active/book/{bookId}")
-    public ResponseEntity<?> getActiveLoansForBook(@PathVariable Long bookId) {
+    @GetMapping("/active_book/{bookId}")
+    @Operation(summary = "Get active loans for the book with assigend id", description = "Returns list of active loans for the book by id")
+    public ResponseEntity<?> getActiveLoansForBook(@Parameter(description="ID of the book",required = true) @PathVariable Long bookId) {
         Optional<Book> bookOptional = bookService.findById(bookId);
         if (bookOptional.isPresent()) {
             List<BookLoan> loans = bookLoanService.findActiveLoansForBook(bookOptional.get());
@@ -112,20 +123,23 @@ public class BookLoanController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/all")
+    @Operation(summary = "Get all loans", description = "Returns list of all loans")
     public ResponseEntity<List<BookLoan>> getAllLoans() {
         List<BookLoan> loans = bookLoanService.findAllLoans();
         return ResponseEntity.ok(loans);
     }
 
     @GetMapping("/overdue")
+    @Operation(summary = "Get all overdue loans", description = "Returns list of all overdue loans")
     public ResponseEntity<List<BookLoan>> getOverdueLoans() {
         List<BookLoan> loans = bookLoanService.findOverdueLoans();
         return ResponseEntity.ok(loans);
     }
 
-    @PostMapping("/{id}/return")
-    public ResponseEntity<?> returnBook(@PathVariable Long id) {
+    @PostMapping("/return/{id}")
+    @Operation(summary = "Returns book by id of the loan", description = "Returns book and deactivates loan by id")
+    public ResponseEntity<?> returnBook(@Parameter(description="ID of the loan",required = true) @PathVariable Long id) {
         try {
             BookLoan loan = bookLoanService.returnBook(id);
             return ResponseEntity.ok(loan);

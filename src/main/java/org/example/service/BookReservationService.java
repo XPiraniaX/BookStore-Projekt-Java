@@ -2,6 +2,7 @@ package org.example.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Book;
+import org.example.entity.BookLoan;
 import org.example.entity.BookReservation;
 import org.example.entity.User;
 import org.example.repository.BookRepository;

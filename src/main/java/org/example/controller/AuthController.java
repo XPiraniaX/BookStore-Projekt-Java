@@ -1,6 +1,9 @@
 package org.example.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.User;
 import org.example.service.UserService;
@@ -14,13 +17,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication Controller")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
+    @Operation(summary = "Register new user",description = "Adds new user to database")
+    public ResponseEntity<?> registerUser(@Parameter(description = "User object",required = true)@Valid @RequestBody User user) {
         try {
             user.setRole(User.Role.USER);
             User registeredUser = userService.registerUser(user);
@@ -36,7 +41,8 @@ public class AuthController {
     }
 
     @PostMapping("/register/admin")
-    public ResponseEntity<?> registerAdmin(@Valid @RequestBody User user) {
+    @Operation(summary = "Register new admin",description = "Adds new admin to database")
+    public ResponseEntity<?> registerAdmin(@Parameter(description = "User object (admin role)",required = true)@Valid @RequestBody User user) {
         try {
             user.setRole(User.Role.ADMIN);
             User registeredUser = userService.registerUser(user);
@@ -52,6 +58,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
+    @Operation  (summary = "Get current user",description = "Returns current user")
     public ResponseEntity<?> getCurrentUser() {
         return ResponseEntity.ok().build();
     }
