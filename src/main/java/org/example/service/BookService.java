@@ -12,20 +12,15 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class BookService  {
-
-    private BookRepository bookRepository;
-    private BookLoanRepository bookLoanRepository;
-    private BookReservationRepository bookReservationRepository;
+public class BookService extends AbstractBookService {
 
     public BookService(BookRepository bookRepository,
-                           BookLoanRepository bookLoanRepository,
-                           BookReservationRepository bookReservationRepository) {
-        this.bookRepository = bookRepository;
-        this.bookLoanRepository = bookLoanRepository;
-        this.bookReservationRepository = bookReservationRepository;
+                       BookLoanRepository bookLoanRepository,
+                       BookReservationRepository bookReservationRepository) {
+        super(bookRepository, bookLoanRepository, bookReservationRepository);
     }
 
+    @Override
     public Book addBook(Book book) {
         if (book.getAvailableQuantity() == null) {
             book.setAvailableQuantity(book.getQuantity());
@@ -34,36 +29,42 @@ public class BookService  {
         return savedBook;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Optional<Book> findById(Long id) {
         Optional<Book> bookOptional = bookRepository.findById(id);
         return bookOptional;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<Book> findAllBooks() {
         List<Book> allBooks = bookRepository.findAll();
         return allBooks;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<Book> findByTitle(String title) {
         List<Book> books = bookRepository.findByTitle(title);
         return books;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<Book> findByAuthor(String author) {
         List<Book> books = bookRepository.findByAuthor(author);
         return books;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<Book> findAvailableBooks() {
         List<Book> availableBooks = bookRepository.findAllAvailableBooks();
         return availableBooks;
     }
 
+    @Override
     public Book updateBook(Book book) {
         boolean bookExists = bookRepository.existsById(book.getId());
         if (!bookExists) {
@@ -80,10 +81,12 @@ public class BookService  {
         return updatedBook;
     }
 
+    @Override
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public boolean isBookAvailable(Long bookId) {
         int availableQuantity = getAvailableQuantity(bookId);
@@ -92,6 +95,7 @@ public class BookService  {
         return isAvailable;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public int getAvailableQuantity(Long bookId) {
         Optional<Book> bookOptional = bookRepository.findById(bookId);

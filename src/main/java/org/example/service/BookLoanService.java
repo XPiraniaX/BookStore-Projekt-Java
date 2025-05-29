@@ -20,13 +20,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BookLoanService {
+public class BookLoanService extends AbstractBookLoanService {
 
     private final BookLoanRepository bookLoanRepository;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
     private final BookReservationRepository bookReservationRepository;
 
+    @Override
     public BookLoan createLoan(Long userId, Long bookId, LocalDateTime dueDate) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -75,23 +76,25 @@ public class BookLoanService {
         return bookLoanRepository.save(loan);
     }
 
-
+    @Override
     @Transactional(readOnly = true)
     public Optional<BookLoan> findById(Long id) {
         return bookLoanRepository.findById(id);
     }
 
-
+    @Override
     @Transactional(readOnly = true)
     public List<BookLoan> findByUser(User user) {
         return bookLoanRepository.findByUser(user);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookLoan> findByBook(Book book) {
         return bookLoanRepository.findByBook(book);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookLoan> findActiveLoans() {
         return bookLoanRepository.findAll().stream()
@@ -99,26 +102,31 @@ public class BookLoanService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookLoan> findActiveLoansForUser(User user) {
         return bookLoanRepository.findByUserAndReturned(user, false);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookLoan> findActiveLoansForBook(Book book) {
         return bookLoanRepository.findByBookAndReturned(book, false);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookLoan> findAllLoans() {
         return bookLoanRepository.findAll();
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookLoan> findOverdueLoans() {
         return bookLoanRepository.findOverdueLoans(LocalDateTime.now());
     }
 
+    @Override
     public BookLoan returnBook(Long loanId) {
         BookLoan loan = bookLoanRepository.findById(loanId)
                 .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
@@ -137,12 +145,14 @@ public class BookLoanService {
         return bookLoanRepository.save(loan);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public boolean hasActiveLoan(User user, Book book) {
         return !bookLoanRepository.findByUserAndReturned(user, false).isEmpty() &&
                !bookLoanRepository.findByBookAndReturned(book, false).isEmpty();
     }
 
+    @Override
     @Transactional(readOnly = true)
     public long countActiveLoans(Book book) {
         return bookLoanRepository.countActiveLoans(book);

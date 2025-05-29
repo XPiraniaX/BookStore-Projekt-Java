@@ -11,17 +11,13 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UserService {
-
-    private UserRepository userRepository;
-
-    private PasswordEncoder passwordEncoder;
+public class UserService extends AbstractUserService {
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        super(userRepository, passwordEncoder);
     }
 
+    @Override
     public User registerUser(User user) {
         boolean usernameExists = existsByUsername(user.getUsername());
         if (usernameExists) {
@@ -45,24 +41,28 @@ public class UserService {
         return savedUser;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         return userOptional;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Optional<User> findById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<User> findAllUsers() {
         List<User> allUsers = userRepository.findAll();
         return allUsers;
     }
 
+    @Override
     public User updateUser(User user) {
         boolean userExists = userRepository.existsById(user.getId());
         if (!userExists) {
@@ -87,16 +87,19 @@ public class UserService {
         return updatedUser;
     }
 
+    @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public boolean existsByUsername(String username) {
         boolean exists = userRepository.existsByUsername(username);
         return exists;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
         boolean exists = userRepository.existsByEmail(email);

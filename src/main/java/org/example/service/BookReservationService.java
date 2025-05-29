@@ -2,7 +2,6 @@ package org.example.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Book;
-import org.example.entity.BookLoan;
 import org.example.entity.BookReservation;
 import org.example.entity.User;
 import org.example.repository.BookRepository;
@@ -18,12 +17,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BookReservationService {
+public class BookReservationService extends AbstractBookReservationService {
 
     private final BookReservationRepository bookReservationRepository;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
 
+    @Override
     public BookReservation createReservation(Long userId, Long bookId, LocalDateTime expirationDate) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -53,42 +53,49 @@ public class BookReservationService {
         return bookReservationRepository.save(reservation);
     }
 
-
+    @Override
     @Transactional(readOnly = true)
     public Optional<BookReservation> findById(Long id) {
         return bookReservationRepository.findById(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookReservation> findByUser(User user) {
         return bookReservationRepository.findByUser(user);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookReservation> findByBook(Book book) {
         return bookReservationRepository.findByBook(book);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookReservation> findActiveReservationsByUser(User user) {
         return bookReservationRepository.findByUserAndActive(user, true);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookReservation> findActiveReservationsByBook(Book book) {
         return bookReservationRepository.findByBookAndActive(book, true);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookReservation> findAllReservations() {
         return bookReservationRepository.findAll();
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<BookReservation> findExpiredReservations() {
         return bookReservationRepository.findExpiredReservations(LocalDateTime.now());
     }
 
+    @Override
     public void cancelReservation(Long reservationId) {
         BookReservation reservation = bookReservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
@@ -105,6 +112,7 @@ public class BookReservationService {
         bookRepository.save(book);
     }
 
+    @Override
     public void processExpiredReservations() {
         List<BookReservation> expiredReservations = findExpiredReservations();
         
@@ -115,12 +123,14 @@ public class BookReservationService {
         }
     }
 
+    @Override
     @Transactional(readOnly = true)
     public boolean hasActiveReservation(User user, Book book) {
         return !bookReservationRepository.findByUserAndActive(user, true).isEmpty() &&
                !bookReservationRepository.findByBookAndActive(book, true).isEmpty();
     }
 
+    @Override
     @Transactional(readOnly = true)
     public long countActiveReservations(Book book) {
         return bookReservationRepository.countActiveReservationsByBook(book);

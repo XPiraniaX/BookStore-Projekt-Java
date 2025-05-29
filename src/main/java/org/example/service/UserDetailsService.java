@@ -13,7 +13,7 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+public class UserDetailsService extends AbstractUserDetailsService {
 
     private final UserRepository userRepository;
 
