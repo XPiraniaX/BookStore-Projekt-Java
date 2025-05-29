@@ -14,24 +14,20 @@ Bookstore - aplikacja do zarządzania książkami, użytkownikami, rezerwacjami 
   - dodawanie 
   - usuwanie
   - modyfikacja
-  - wyszukiwanie z filtrami 
-  - 
+  - wyszukiwanie z filtrami
 - System zarządzania użytkownikami
   - User: Przeglądanie książek po filtrach, wyszukiwanie, rezerwacja, anulowanie rezerwacji, wypożyczenie, zwrot, informacje o użytkowniku
   - Admin: Wszystkie funkcjonalnosci usera rozszerzone o zarządzanie każdym systemem(dodawanie, usuwanie, modyfikowanie - ksiązek, użytkowników, rezerwacji, wypożyczeń, rozszerzone filtry wyszukiwania)
-  - 
 - System rezerwacji
   - tworzenie 
   - anulowanie 
   - przetwarzanie przedawnionych
   - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
-  - 
 - System wypożyczeń
     - tworzenie
     - zwrot
     - przetwarzanie przedawnionych
     - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
-    - 
 - System autoryzacji
   - kontrola oparta na rolach
   - rejestracja i logowanie uzytkowników
@@ -286,7 +282,9 @@ mvn clean test
 Tabela generowana przez jacoco dostępna jest w katalogu `target/site/jacoco/index.html`.
 
 Przykładowy test (klasy 'Book')
+
 ![test Book](test.PNG)
 
 Testy spełniają wymaganie dotyczące pokrycia kodu
+
 ![jacoco_report](jacoco.PNG)
