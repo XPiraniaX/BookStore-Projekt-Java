@@ -2,12 +2,14 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Book;
 import org.example.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,8 +26,9 @@ public class BookController {
 
     private final BookService bookService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    @Operation(summary = "Create new book", description = "Adds new book to database")
+    @Operation(summary = "Create new book", description = "Adds new book to database",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> addBook(@Valid @RequestBody Book book) {
         try {
             Book savedBook = bookService.addBook(book);
@@ -78,8 +81,9 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
-    @Operation (summary = "Update book by id", description = "Updates information in database about book with matching id")
+    @Operation (summary = "Update book by id", description = "Updates information in database about book with matching id",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> updateBook( @Parameter (description="ID of the book",required = true) @PathVariable Long id, @Valid @RequestBody Book book) {
         try {
             book.setId(id);
@@ -92,8 +96,9 @@ public class BookController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    @Operation (summary = "Delete book by id", description = "Deletes information in database about book with matching id")
+    @Operation (summary = "Delete book by id", description = "Deletes information in database about book with matching id",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> deleteBook(@Parameter (description="ID of the book",required = true) @PathVariable Long id) {
         try {
             bookService.deleteBook(id);

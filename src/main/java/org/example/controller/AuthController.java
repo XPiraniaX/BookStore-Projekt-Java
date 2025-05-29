@@ -3,12 +3,14 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.User;
 import org.example.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,8 +42,9 @@ public class AuthController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register/admin")
-    @Operation(summary = "Register new admin",description = "Adds new admin to database")
+    @Operation(summary = "Register new admin",description = "Adds new admin to database",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> registerAdmin(@Parameter(description = "User object (admin role)",required = true)@Valid @RequestBody User user) {
         try {
             user.setRole(User.Role.ADMIN);

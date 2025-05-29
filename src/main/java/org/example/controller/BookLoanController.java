@@ -2,6 +2,7 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Book;
@@ -13,6 +14,7 @@ import org.example.service.UserService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -74,8 +76,9 @@ public class BookLoanController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get_book/{bookId}")
-    @Operation(summary = "Get loan by id of assigned book", description = "Returns loan with assigned id of the book")
+    @Operation(summary = "Get loan by id of assigned book", description = "Returns loan with assigned id of the book",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> getLoansByBook(@Parameter(description="ID of the book",required = true) @PathVariable Long bookId) {
         Optional<Book> bookOptional = bookService.findById(bookId);
         if (bookOptional.isPresent()) {
@@ -88,8 +91,9 @@ public class BookLoanController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/active")
-    @Operation(summary = "Get loans by active status", description = "Returns list of active loans")
+    @Operation(summary = "Get loans by active status", description = "Returns list of active loans",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<List<BookLoan>> getActiveLoans() {
         List<BookLoan> loans = bookLoanService.findActiveLoans();
         return ResponseEntity.ok(loans);
@@ -109,8 +113,9 @@ public class BookLoanController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/active_book/{bookId}")
-    @Operation(summary = "Get active loans for the book with assigend id", description = "Returns list of active loans for the book by id")
+    @Operation(summary = "Get active loans for the book with assigend id", description = "Returns list of active loans for the book by id",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> getActiveLoansForBook(@Parameter(description="ID of the book",required = true) @PathVariable Long bookId) {
         Optional<Book> bookOptional = bookService.findById(bookId);
         if (bookOptional.isPresent()) {
@@ -123,19 +128,22 @@ public class BookLoanController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
-    @Operation(summary = "Get all loans", description = "Returns list of all loans")
+    @Operation(summary = "Get all loans", description = "Returns list of all loans",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<List<BookLoan>> getAllLoans() {
         List<BookLoan> loans = bookLoanService.findAllLoans();
         return ResponseEntity.ok(loans);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/overdue")
-    @Operation(summary = "Get all overdue loans", description = "Returns list of all overdue loans")
+    @Operation(summary = "Get all overdue loans", description = "Returns list of all overdue loans",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<List<BookLoan>> getOverdueLoans() {
         List<BookLoan> loans = bookLoanService.findOverdueLoans();
         return ResponseEntity.ok(loans);
     }
+
 
     @PostMapping("/return/{id}")
     @Operation(summary = "Returns book by id of the loan", description = "Returns book and deactivates loan by id")

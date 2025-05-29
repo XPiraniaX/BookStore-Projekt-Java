@@ -2,6 +2,7 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Book;
@@ -14,6 +15,7 @@ import org.example.service.UserService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -74,9 +76,9 @@ public class BookReservationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get_book/{bookId}")
-    @Operation(summary = "Get reservation by id of assigned book", description = "Returns reservation with assigned id of the book")
+    @Operation(summary = "Get reservation by id of assigned book", description = "Returns reservation with assigned id of the book",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> getReservationsByBook(@Parameter(description="ID of the book",required = true)@PathVariable Long bookId) {
         Optional<Book> bookOptional = bookService.findById(bookId);
         if (bookOptional.isPresent()) {
@@ -103,8 +105,9 @@ public class BookReservationController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/active_book/{bookId}")
-    @Operation(summary = "Get active reservations for the book with assigend id", description = "Returns list of active reservations for the book by id")
+    @Operation(summary = "Get active reservations for the book with assigend id", description = "Returns list of active reservations for the book by id",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> getActiveReservationsByBook(@Parameter(description="ID of the book",required = true) @PathVariable Long bookId) {
         Optional<Book> bookOptional = bookService.findById(bookId);
         if (bookOptional.isPresent()) {
@@ -117,15 +120,17 @@ public class BookReservationController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
-    @Operation(summary = "Get all reservations", description = "Returns list of all reservations")
+    @Operation(summary = "Get all reservations", description = "Returns list of all reservations",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<List<BookReservation>> getAllReservations() {
         List<BookReservation> reservation = bookReservationService.findAllReservations();
         return ResponseEntity.ok(reservation);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/active")
-    @Operation(summary = "Get all active reservations", description = "Returns list of active reservations")
+    @Operation(summary = "Get all active reservations", description = "Returns list of active reservations",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<List<BookReservation>> getActiveReservations() {
         List<BookReservation> reservations = bookReservationService.findAllReservations().stream()
                 .filter(BookReservation::isActive)
@@ -133,8 +138,9 @@ public class BookReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/expired")
-    @Operation(summary = "Get all expired reservations", description = "Returns list of all expired reservations")
+    @Operation(summary = "Get all expired reservations", description = "Returns list of all expired reservations",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<List<BookReservation>> getExpiredReservations() {
         List<BookReservation> reservations = bookReservationService.findExpiredReservations();
         return ResponseEntity.ok(reservations);
@@ -153,8 +159,9 @@ public class BookReservationController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/process_expired")
-    @Operation(summary = "Cancels expired reservations", description = "Using cancel system on overdue reservations")
+    @Operation(summary = "Cancels expired reservations", description = "Using cancel system on overdue reservations",security = @SecurityRequirement(name = "basicAuth"))
     public ResponseEntity<?> processExpiredReservations() {
         try {
             bookReservationService.processExpiredReservations();
