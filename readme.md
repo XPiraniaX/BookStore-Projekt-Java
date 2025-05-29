@@ -1,5 +1,7 @@
 # Dokumentacja
 
+Kamil Gębala 151868
+
 ## I.Temat 
 
 BookStore - aplikacja do zarządzania księgarnią
@@ -25,12 +27,14 @@ Bookstore - aplikacja do zarządzania książkami, użytkownikami, rezerwacjami 
     - anulowanie 
     - przetwarzanie przedawnionych
     - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
+    - historia rezerwacji
     
 4.  System wypożyczeń
     - tworzenie
     - zwrot
     - przetwarzanie przedawnionych
     - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
+    - historia wypożyczeń
 
 5.  System autoryzacji
     - kontrola oparta na rolach
@@ -105,7 +109,7 @@ src/
 
 ## V.Diagram ERD
 
-![ERD](erd.PNG)
+![ERD](png/erd.PNG)
 
 ## VI.Tabele bazodanowe
 
@@ -233,8 +237,8 @@ Aplikacja udostępnia następujące kontrolery REST API:
 ## IX.Polimorfizm
 
 Projekt wykożystuje polimorfizm jak wskazano w wymaganiach projektowych (np 'AbstractUserService' i 'UserService')
-![AbstractUserService](abstractuserservice.PNG)
-![UserService](userservice.PNG)
+![AbstractUserService](png/abstractuserservice.PNG)
+![UserService](png/userservice.PNG)
 
 ## X.Wzorce projektowe
 
@@ -274,6 +278,11 @@ docker-decompose up --build
 
 [Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
 
+5.  Wbudowani użytkownicy
+
+- 'user' / 'user' - standardowy użytkownik
+- 'admin' / 'admin' - administrator (wszystkie uprawnienia) 
+- 
 ## XII.Testy
 
 Aplikacja zawiera kompleksowe testy dla wszystkich kontenerów, realizowane są za pomocą frameworku testowego Spring.
@@ -287,8 +296,50 @@ Tabela generowana przez jacoco dostępna jest w katalogu `target/site/jacoco/ind
 
 Przykładowy test (klasy 'Book')
 
-![test Book](test.PNG)
+![test Book](png/test.PNG)
 
 Testy spełniają wymaganie dotyczące pokrycia kodu
 
-![jacoco_report](jacoco.PNG)
+![jacoco_report](png/jacoco.PNG)
+
+## XIII. Przykładowe działanie projektu (Swagger)
+
+### Logowanie
+
+![logowanie](png/logowanie.PNG)
+
+### Wyszukanie wszystkich użytkowników
+
+![userall](png/userall.PNG)
+
+### Wyszukanie wszystkich dostepnych książek
+
+![allbooks](png/allbooks.PNG)
+
+### Stworzenie rezerwacji
+
+![reservation](png/reservation.PNG)
+
+### Anulowanie rezerwacji
+
+![cancel](png/cancel.PNG)
+
+### Stworzenie wypożyczenia
+
+![loan](png/loan.PNG)
+
+### Pobranie aktywnych wypozyczeń
+
+![activeloan](png/activeloan.PNG)
+
+### Zwrot książki
+
+![return](png/return.PNG)
+
+Widać że ksiażka została zwrócona 
+
+![returned](png/returned.PNG)
+
+### Rejestracja nowego admina
+
+![admin](png/admin.PNG)
