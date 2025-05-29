@@ -281,8 +281,7 @@ docker-decompose up --build
 5.  Wbudowani użytkownicy
 
 - 'user' / 'user' - standardowy użytkownik
-- 'admin' / 'admin' - administrator (wszystkie uprawnienia) 
-- 
+- 'admin' / 'admin' - administrator (wszystkie uprawnienia)
 ## XII.Testy
 
 Aplikacja zawiera kompleksowe testy dla wszystkich kontenerów, realizowane są za pomocą frameworku testowego Spring.
