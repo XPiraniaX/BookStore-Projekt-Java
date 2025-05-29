@@ -8,9 +8,142 @@ BookStore - aplikacja do zarządzania księgarnią
 
 Bookstore - aplikacja do zarządzania książkami, użytkownikami, rezerwacjami oraz wypożyczeniami książek, przy pomocy SpringBoot, Dockera, Mavena, Swagera oraz PostgreSQL.
 
-# Realizowane systemy
+## Realizowane systemy
 
-## Struktura
+- System książek
+  - dodawanie 
+  - usuwanie
+  - modyfikacja
+  - wyszukiwanie z filtrami 
+  - 
+- System zarządzania użytkownikami
+  - User: Przeglądanie książek po filtrach, wyszukiwanie, rezerwacja, anulowanie rezerwacji, wypożyczenie, zwrot, informacje o użytkowniku
+  - Admin: Wszystkie funkcjonalnosci usera rozszerzone o zarządzanie każdym systemem(dodawanie, usuwanie, modyfikowanie - ksiązek, użytkowników, rezerwacji, wypożyczeń, rozszerzone filtry wyszukiwania)
+  - 
+- System rezerwacji
+  - tworzenie 
+  - anulowanie 
+  - przetwarzanie przedawnionych
+  - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
+  - 
+- System wypożyczeń
+    - tworzenie
+    - zwrot
+    - przetwarzanie przedawnionych
+    - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
+    - 
+- System autoryzacji
+  - kontrola oparta na rolach
+  - rejestracja i logowanie uzytkowników
+  - informacje o bieżącym użytkowniku
+
+## Struktura Projektu
+
+```
+src/
+├── main/
+│   ├── java/org/example/
+│   │   ├── config/          # Konfiguracja Spring Security, Swagger
+│   │   │   ├── OpenApiConfig.java
+│   │   │   └── SecurityConfig.java
+│   │   ├── controller/      # Kontrolery REST
+│   │   │   ├── AuthController.java
+│   │   │   ├── BookController.java
+│   │   │   ├── BookLoanController.java
+│   │   │   ├── BookReservationController.java
+│   │   │   └── UserController.java
+│   │   ├── entity/          # Encje JPA
+│   │   │   ├── Book.java
+│   │   │   ├── BookLoan.java
+│   │   │   ├── BookReservation.java
+│   │   │   └── User.java
+│   │   ├── repository/      # Repozytoria Spring Data
+│   │   │   ├── BookRepository.java
+│   │   │   ├── BookLoanRepository.java
+│   │   │   ├── BookReservationRepository.java
+│   │   │   └── UserRepository.java
+│   │   ├── service/         # Logika service
+│   │   │   ├── AbstractBookService.java
+│   │   │   ├── AbstractBookLoanService.java
+│   │   │   ├── AbstractBookReservationService.java
+│   │   │   ├── AbstractUserService.java
+│   │   │   ├── AbstractUserDetailsService.java
+│   │   │   ├── BookService.java
+│   │   │   ├── BookLoanService.java
+│   │   │   ├── BookReservationService.java
+│   │   │   ├── UserService.java
+│   │   │   └── UserDetailsService.java
+│   │   └── Main.java
+│   └── resources/
+│       ├── db/migration/    # Migracje Flyway
+│       ├── templates/
+│       └── application.properties
+└── test/                    # Testy jednostkowe i integracyjne
+└── java/org/example/
+├── config/          # Testy konfiguracji
+│   ├── OpenApiConfigTest.java
+│   └── SecurityConfigTest.java
+├── controller/      # Testy kontrolerów
+│   ├── AuthControllerTest.java
+│   ├── BookControllerTest.java
+│   ├── BookLoanControllerTest.java
+│   ├── BookReservationControllerTest.java
+│   └── UserControllerTest.java
+├── entity/          # Testy encji
+│   ├── BookLoanTest.java
+│   ├── BookReservationTest.java
+│   ├── BookTest.java
+│   └── UserTest.java
+├── service/         # Testy service
+│   ├── BookLoanServiceTest.java
+│   ├── BookReservationServiceTest.java
+│   ├── BookServiceTest.java
+│   ├── UserDetailsServiceTest.java
+│   └── UserServiceTest.java
+└── MainTest.java    # Główna klasa testowa
+```
+
+## Diagram ERD
+
+![ERD](erd.PNG)
+
+## Tabele bazodanowe
+
+Aplikacja korzysta z następujących tabel w bazie danych:
+
+1. **Book** - Przechowuje informacje o książkach
+    - id: Long (klucz główny)
+    - title: String (tytuł książki)
+    - author: String (autor książki)
+    - description: String (opis książki)
+    - quantity: Integer (całkowita liczba egzemplarzy)
+    - availableQuantity: Integer (liczba dostępnych egzemplarzy)
+
+2. **BookLoan** - Przechowuje informacje o wypożyczeniach
+    - id: Long (klucz główny)
+    - user: User (użytkownik wypożyczający książkę)
+    - book: Book (wypożyczona książka)
+    - loanDate: LocalDateTime (data wypożyczenia)
+    - dueDate: LocalDateTime (termin zwrotu)
+    - returnDate: LocalDateTime (data faktycznego zwrotu)
+    - returned: boolean (czy książka została zwrócona)
+
+3. **BookReservation** - Przechowuje informacje o rezerwacjach
+    - id: Long (klucz główny)
+    - user: User (użytkownik rezerwujący książkę)
+    - book: Book (zarezerwowana książka)
+    - reservationDate: LocalDateTime (data rezerwacji)
+    - expirationDate: LocalDateTime (data wygaśnięcia rezerwacji)
+    - active: boolean (czy rezerwacja jest aktywna)
+
+4. **User** - Przechowuje informacje o użytkownikach
+    - id: Long (klucz główny)
+    - username: String (nazwa użytkownika)
+    - password: String (hasło użytkownika)
+    - email: String (adres email)
+    - role: Role (rola użytkownika: USER lub ADMIN)
+
+## Pakiety Główne
 
 Projekt jest zorganizowany w następujące pakiety:
 
@@ -43,20 +176,6 @@ Projekt jest zorganizowany w następujące pakiety:
   - AbstractBookReservationService i BookReservationService: Serwis do zarządzania rezerwacjami
   - AbstractUserService i UserService: Serwis do zarządzania użytkownikami
   - AbstractUserDetailsService i UserDetailsService: Serwis do autentykacji użytkowników
-
-## Wzorce projektowe
-
-W projekcie zastosowano następujące wzorce projektowe:
-
-1. **Wzorzec Template Method**: Zastosowany w klasach serwisowych poprzez użycie klas abstrakcyjnych (np. AbstractUserService) i ich konkretnych implementacji (np. UserService).
-
-2. **Wzorzec Repository**: Zastosowany poprzez interfejsy repozytoriów rozszerzające JpaRepository, co zapewnia standardowe operacje CRUD na encjach.
-
-3. **Wzorzec Dependency Injection**: Zastosowany poprzez wstrzykiwanie zależności za pomocą adnotacji @Autowired i konstruktorów z adnotacją @RequiredArgsConstructor.
-
-4. **Wzorzec Builder**: Zastosowany w encjach poprzez użycie adnotacji @Builder z biblioteki Lombok.
-
-5. **Wzorzec MVC (Model-View-Controller)**: Zastosowany poprzez podział aplikacji na warstwy modelu (entity, repository), kontrolera (controller) i widoku (API REST).
 
 ## Kontrolery
 
@@ -111,54 +230,60 @@ Aplikacja udostępnia następujące kontrolery REST API:
    - GET /api/users/exists/username/{username} - Sprawdzenie czy istnieje użytkownik o podanej nazwie
    - GET /api/users/exists/email/{email} - Sprawdzenie czy istnieje użytkownik o podanym adresie email
 
-## Tabele bazodanowe
-
-Aplikacja korzysta z następujących tabel w bazie danych:
-
-1. **Book** - Przechowuje informacje o książkach
-   - id: Long (klucz główny)
-   - title: String (tytuł książki)
-   - author: String (autor książki)
-   - description: String (opis książki)
-   - quantity: Integer (całkowita liczba egzemplarzy)
-   - availableQuantity: Integer (liczba dostępnych egzemplarzy)
-
-2. **BookLoan** - Przechowuje informacje o wypożyczeniach
-   - id: Long (klucz główny)
-   - user: User (użytkownik wypożyczający książkę)
-   - book: Book (wypożyczona książka)
-   - loanDate: LocalDateTime (data wypożyczenia)
-   - dueDate: LocalDateTime (termin zwrotu)
-   - returnDate: LocalDateTime (data faktycznego zwrotu)
-   - returned: boolean (czy książka została zwrócona)
-
-3. **BookReservation** - Przechowuje informacje o rezerwacjach
-   - id: Long (klucz główny)
-   - user: User (użytkownik rezerwujący książkę)
-   - book: Book (zarezerwowana książka)
-   - reservationDate: LocalDateTime (data rezerwacji)
-   - expirationDate: LocalDateTime (data wygaśnięcia rezerwacji)
-   - active: boolean (czy rezerwacja jest aktywna)
-
-4. **User** - Przechowuje informacje o użytkownikach
-   - id: Long (klucz główny)
-   - username: String (nazwa użytkownika)
-   - password: String (hasło użytkownika)
-   - email: String (adres email)
-   - role: Role (rola użytkownika: USER lub ADMIN)
-
 ## Polimorfizm
 
 Projekt wykożystuje polimorfizm jak wskazano w wymaganiach projektowych (np 'AbstractUserService' i 'UserService')
 ![AbstractUserService](abstractuserservice.PNG)
 ![UserService](userservice.PNG)
 
+## Wzorce projektowe
 
+W projekcie zastosowano następujące wzorce projektowe:
 
+1. **Wzorzec Template Method**: Zastosowany w klasach serwisowych poprzez użycie klas abstrakcyjnych (np. AbstractUserService) i ich konkretnych implementacji (np. UserService).
 
-## Testy (Jacoco)
+2. **Wzorzec Repository**: Zastosowany poprzez interfejsy repozytoriów rozszerzające JpaRepository, co zapewnia standardowe operacje CRUD na encjach.
 
+3. **Wzorzec Dependency Injection**: Zastosowany poprzez wstrzykiwanie zależności za pomocą adnotacji @Autowired i konstruktorów z adnotacją @RequiredArgsConstructor.
 
+4. **Wzorzec Builder**: Zastosowany w encjach poprzez użycie adnotacji @Builder z biblioteki Lombok.
+
+5. **Wzorzec MVC (Model-View-Controller)**: Zastosowany poprzez podział aplikacji na warstwy modelu (entity, repository), kontrolera (controller) i widoku (API REST).
+
+## Uruchamianie Projektu
+
+### 1.Pobranie repozytorum git
+
+```bash
+git clone https://github.com/XPiraniaX/BookStore-Projekt-Java
+```
+
+### 2.Uruchomienie przy pomocy Mavena
+
+```bash
+mvn clean package -DskipTests
+```
+
+### 3.Połączenie z Dockerem
+
+```bash
+docker-decompose up --build
+```
+
+### 4.Swagger
+
+[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
+
+## Testy
+
+Aplikacja zawiera kompleksowe testy dla wszystkich kontenerów, realizowane są za pomocą frameworku testowego Spring.
+
+### Uruchomienie testów
+
+```bash
+mvn clean test
+```
+Tabela generowana przez jacoco dostępna jest w katalogu `target/site/jacoco/index.html`.
 
 Przykładowy test (klasy 'Book')
 ![test Book](test.PNG)
