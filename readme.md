@@ -1,39 +1,43 @@
 # Dokumentacja
 
-## Temat 
+## I.Temat 
 
 BookStore - aplikacja do zarządzania księgarnią
 
-## Opis 
+## II.Opis 
 
 Bookstore - aplikacja do zarządzania książkami, użytkownikami, rezerwacjami oraz wypożyczeniami książek, przy pomocy SpringBoot, Dockera, Mavena, Swagera oraz PostgreSQL.
 
-## Realizowane systemy
+## III.Realizowane systemy
 
-- System książek
-  - dodawanie 
-  - usuwanie
-  - modyfikacja
-  - wyszukiwanie z filtrami
-- System zarządzania użytkownikami
-  - User: Przeglądanie książek po filtrach, wyszukiwanie, rezerwacja, anulowanie rezerwacji, wypożyczenie, zwrot, informacje o użytkowniku
-  - Admin: Wszystkie funkcjonalnosci usera rozszerzone o zarządzanie każdym systemem(dodawanie, usuwanie, modyfikowanie - ksiązek, użytkowników, rezerwacji, wypożyczeń, rozszerzone filtry wyszukiwania)
-- System rezerwacji
-  - tworzenie 
-  - anulowanie 
-  - przetwarzanie przedawnionych
-  - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
-- System wypożyczeń
+1.  System książek
+    - dodawanie 
+    - usuwanie
+    - modyfikacja
+    - wyszukiwanie z filtrami
+
+2.  System zarządzania użytkownikami
+    - User: Przeglądanie książek po filtrach, wyszukiwanie, rezerwacja, anulowanie rezerwacji, wypożyczenie, zwrot, informacje o użytkowniku
+    - Admin: Wszystkie funkcjonalnosci usera rozszerzone o zarządzanie każdym systemem(dodawanie, usuwanie, modyfikowanie - ksiązek, użytkowników, rezerwacji, wypożyczeń, rozszerzone filtry wyszukiwania)
+
+3.  System rezerwacji
+    - tworzenie 
+    - anulowanie 
+    - przetwarzanie przedawnionych
+    - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
+    
+4.  System wypożyczeń
     - tworzenie
     - zwrot
     - przetwarzanie przedawnionych
     - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
-- System autoryzacji
-  - kontrola oparta na rolach
-  - rejestracja i logowanie uzytkowników
-  - informacje o bieżącym użytkowniku
 
-## Struktura Projektu
+5.  System autoryzacji
+    - kontrola oparta na rolach
+    - rejestracja i logowanie uzytkowników
+    - informacje o bieżącym użytkowniku
+
+## IV.Struktura Projektu
 
 ```
 src/
@@ -99,11 +103,11 @@ src/
 └── MainTest.java    # Główna klasa testowa
 ```
 
-## Diagram ERD
+## V.Diagram ERD
 
 ![ERD](erd.PNG)
 
-## Tabele bazodanowe
+## VI.Tabele bazodanowe
 
 Aplikacja korzysta z następujących tabel w bazie danych:
 
@@ -139,7 +143,7 @@ Aplikacja korzysta z następujących tabel w bazie danych:
     - email: String (adres email)
     - role: Role (rola użytkownika: USER lub ADMIN)
 
-## Pakiety Główne
+## VII.Pakiety Główne
 
 Projekt jest zorganizowany w następujące pakiety:
 
@@ -173,7 +177,7 @@ Projekt jest zorganizowany w następujące pakiety:
   - AbstractUserService i UserService: Serwis do zarządzania użytkownikami
   - AbstractUserDetailsService i UserDetailsService: Serwis do autentykacji użytkowników
 
-## Kontrolery
+## VIII.Kontrolery
 
 Aplikacja udostępnia następujące kontrolery REST API:
 
@@ -226,13 +230,13 @@ Aplikacja udostępnia następujące kontrolery REST API:
    - GET /api/users/exists/username/{username} - Sprawdzenie czy istnieje użytkownik o podanej nazwie
    - GET /api/users/exists/email/{email} - Sprawdzenie czy istnieje użytkownik o podanym adresie email
 
-## Polimorfizm
+## IX.Polimorfizm
 
 Projekt wykożystuje polimorfizm jak wskazano w wymaganiach projektowych (np 'AbstractUserService' i 'UserService')
 ![AbstractUserService](abstractuserservice.PNG)
 ![UserService](userservice.PNG)
 
-## Wzorce projektowe
+## X.Wzorce projektowe
 
 W projekcie zastosowano następujące wzorce projektowe:
 
@@ -246,31 +250,31 @@ W projekcie zastosowano następujące wzorce projektowe:
 
 5. **Wzorzec MVC (Model-View-Controller)**: Zastosowany poprzez podział aplikacji na warstwy modelu (entity, repository), kontrolera (controller) i widoku (API REST).
 
-## Uruchamianie Projektu
+## XI.Uruchamianie Projektu
 
-### 1.Pobranie repozytorum git
+1.  Pobranie repozytorum git
 
 ```bash
 git clone https://github.com/XPiraniaX/BookStore-Projekt-Java
 ```
 
-### 2.Uruchomienie przy pomocy Mavena
+2. Uruchomienie przy pomocy Mavena
 
 ```bash
 mvn clean package -DskipTests
 ```
 
-### 3.Połączenie z Dockerem
+3.  Połączenie z Dockerem
 
 ```bash
 docker-decompose up --build
 ```
 
-### 4.Swagger
+4.  Swagger
 
 [Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
 
-## Testy
+## XII.Testy
 
 Aplikacja zawiera kompleksowe testy dla wszystkich kontenerów, realizowane są za pomocą frameworku testowego Spring.
 
