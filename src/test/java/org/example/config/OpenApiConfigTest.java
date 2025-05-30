@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OpenApiConfigTest {
 
     @Test
-    public void testOpenAPIConfiguration() {
+    public void testOpenAPIConfiguration() { // sprawdzenie czy konfiguracja OpenAPI jest poprawna
         OpenApiConfig openApiConfig = new OpenApiConfig();
 
         OpenAPI openAPI = openApiConfig.openAPI();

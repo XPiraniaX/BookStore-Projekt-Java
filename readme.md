@@ -28,7 +28,7 @@ Bookstore - aplikacja do zarządzania książkami, użytkownikami, rezerwacjami 
     - przetwarzanie przedawnionych
     - wyszukiwanie po id, uzytkowniku, ksiażce, aktywności, kombinacji wcześniejszych
     - historia rezerwacji
-    
+
 4.  System wypożyczeń
     - tworzenie
     - zwrot
@@ -282,7 +282,45 @@ docker-decompose up --build
 
 - 'user' / 'user' - standardowy użytkownik
 - 'admin' / 'admin' - administrator (wszystkie uprawnienia)
-## XII.Testy
+## XII. Autoryzacja
+
+Aplikacja implementuje kompleksowy system autoryzacji i uwierzytelniania użytkowników, zapewniający bezpieczny dostęp do zasobów systemu.
+
+### Mechanizm uwierzytelniania
+
+1. **HTTP Basic Authentication/Spring Seciurity** - Aplikacja wykorzystuje podstawowe uwierzytelnianie HTTP, gdzie dane logowania (nazwa użytkownika i hasło) są przesyłane w nagłówku HTTP.
+
+2. **Bezpieczne przechowywanie haseł** - Hasła użytkowników są szyfrowane przy użyciu algorytmu BCrypt przed zapisaniem w bazie danych, co zapewnia wysoki poziom bezpieczeństwa.
+
+3. **Sesje bezstanowe (Stateless)** - Aplikacja używa bezstanowego modelu sesji, co zwiększa skalowalność i bezpieczeństwo systemu.
+
+### Role użytkowników
+
+System definiuje dwa poziomy uprawnień:
+
+1. **USER** - Standardowy użytkownik z ograniczonymi uprawnieniami:
+   - Przeglądanie książek
+   - Tworzenie i anulowanie własnych rezerwacji
+   - Wypożyczanie i zwracanie książek
+   - Zarządzanie własnym kontem
+
+2. **ADMIN** - Administrator z pełnymi uprawnieniami:
+   - Wszystkie uprawnienia standardowego użytkownika
+   - Zarządzanie książkami (dodawanie, edycja, usuwanie)
+   - Zarządzanie użytkownikami (edycja, usuwanie)
+   - Zarządzanie rezerwacjami i wypożyczeniami wszystkich użytkowników
+   - Rejestracja nowych administratorów
+
+### Kontrola dostępu
+
+1. **Zabezpieczenia na poziomie URL** - Konfiguracja w SecurityConfig.java definiuje, które ścieżki API są publiczne, a które wymagają uwierzytelnienia lub określonych ról:
+   - Publiczne endpointy
+   - Endpointy administratora
+   - Pozostałe endpointy wymagają uwierzytelnienia
+
+2. **Zabezpieczenia na poziomie metod** - Adnotacja `@PreAuthorize` jest używana do kontroli dostępu na poziomie poszczególnych metod, np. rejestracja nowego administratora wymaga roli ADMIN.
+
+## XIII.Testy
 
 Aplikacja zawiera kompleksowe testy dla wszystkich kontenerów, realizowane są za pomocą frameworku testowego Spring.
 
@@ -301,7 +339,7 @@ Testy spełniają wymaganie dotyczące pokrycia kodu
 
 ![jacoco_report](png/jacoco.PNG)
 
-## XIII. Przykładowe działanie projektu (Swagger)
+## XIV. Przykładowe działanie projektu (Swagger)
 
 ### Logowanie
 

@@ -101,7 +101,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void createLoan_Success() throws Exception {
+    void createLoan_Success() throws Exception { // sprawdzenie czy tworzy się wypożyczenie
         when(bookLoanService.createLoan(1L, 1L, dueDate)).thenReturn(loan);
 
         mockMvc.perform(post("/api/loans/add")
@@ -119,7 +119,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void createLoan_Error() throws Exception {
+    void createLoan_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas tworzenia wypożyczenia
         when(bookLoanService.createLoan(1L, 1L, dueDate))
                 .thenThrow(new IllegalStateException("Book is not available for loan"));
 
@@ -135,7 +135,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void getLoanById_Success() throws Exception {
+    void getLoanById_Success() throws Exception { // sprawdzenie czy pobiera wypożyczenie po ID
         when(bookLoanService.findById(1L)).thenReturn(Optional.of(loan));
 
         mockMvc.perform(get("/api/loans/get/1")
@@ -149,7 +149,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void getLoanById_NotFound() throws Exception {
+    void getLoanById_NotFound() throws Exception { // sprawdzenie czy obsługuje brak wypożyczenia o podanym ID
         when(bookLoanService.findById(999L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/loans/get/999")
@@ -161,7 +161,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void getLoansByUser_Success() throws Exception {
+    void getLoansByUser_Success() throws Exception { // sprawdzenie czy pobiera wypożyczenia użytkownika
         when(userService.findById(1L)).thenReturn(Optional.of(user));
         when(bookLoanService.findByUser(user)).thenReturn(Collections.singletonList(loan));
 
@@ -178,7 +178,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void getLoansByUser_UserNotFound() throws Exception {
+    void getLoansByUser_UserNotFound() throws Exception { // sprawdzenie czy obsługuje brak użytkownika przy pobieraniu wypożyczeń
         when(userService.findById(999L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/loans/get_user/999")
@@ -192,7 +192,7 @@ public class BookLoanControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getLoansByBook_Success() throws Exception {
+    void getLoansByBook_Success() throws Exception { // sprawdzenie czy pobiera wypożyczenia dla książki
         when(bookService.findById(1L)).thenReturn(Optional.of(book));
         when(bookLoanService.findByBook(book)).thenReturn(Collections.singletonList(loan));
 
@@ -209,7 +209,7 @@ public class BookLoanControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getLoansByBook_BookNotFound() throws Exception {
+    void getLoansByBook_BookNotFound() throws Exception { // sprawdzenie czy obsługuje brak książki przy pobieraniu wypożyczeń
         when(bookService.findById(999L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/loans/get_book/999"))
@@ -222,7 +222,7 @@ public class BookLoanControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getActiveLoans() throws Exception {
+    void getActiveLoans() throws Exception { // sprawdzenie czy pobiera aktywne wypożyczenia
         when(bookLoanService.findActiveLoans()).thenReturn(Collections.singletonList(loan));
 
         mockMvc.perform(get("/api/loans/active"))
@@ -235,7 +235,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void getActiveLoansForUser_Success() throws Exception {
+    void getActiveLoansForUser_Success() throws Exception { // sprawdzenie czy pobiera aktywne wypożyczenia użytkownika
         when(userService.findById(1L)).thenReturn(Optional.of(user));
         when(bookLoanService.findActiveLoansForUser(user)).thenReturn(Collections.singletonList(loan));
 
@@ -252,7 +252,7 @@ public class BookLoanControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getActiveLoansForBook_Success() throws Exception {
+    void getActiveLoansForBook_Success() throws Exception { // sprawdzenie czy pobiera aktywne wypożyczenia dla książki
         when(bookService.findById(1L)).thenReturn(Optional.of(book));
         when(bookLoanService.findActiveLoansForBook(book)).thenReturn(Collections.singletonList(loan));
 
@@ -269,7 +269,7 @@ public class BookLoanControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getAllLoans() throws Exception {
+    void getAllLoans() throws Exception { // sprawdzenie czy pobiera wszystkie wypożyczenia
         when(bookLoanService.findAllLoans()).thenReturn(Collections.singletonList(loan));
 
         mockMvc.perform(get("/api/loans/all"))
@@ -282,7 +282,7 @@ public class BookLoanControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getOverdueLoans() throws Exception {
+    void getOverdueLoans() throws Exception { // sprawdzenie czy pobiera przeterminowane wypożyczenia
         when(bookLoanService.findOverdueLoans()).thenReturn(Collections.singletonList(loan));
 
         mockMvc.perform(get("/api/loans/overdue"))
@@ -294,7 +294,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void returnBook_Success() throws Exception {
+    void returnBook_Success() throws Exception { // sprawdzenie czy zwraca wypożyczoną książkę
         BookLoan returnedLoan = BookLoan.builder()
                 .id(1L)
                 .user(user)
@@ -317,7 +317,7 @@ public class BookLoanControllerTest {
     }
 
     @Test
-    void returnBook_Error() throws Exception {
+    void returnBook_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas zwrotu książki
         when(bookLoanService.returnBook(999L)).thenThrow(new IllegalArgumentException("Loan not found"));
 
         mockMvc.perform(post("/api/loans/return/999"))

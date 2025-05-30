@@ -93,7 +93,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void createReservation_Success() throws Exception {
+    void createReservation_Success() throws Exception { // sprawdzenie czy tworzy się rezerwacja
         when(bookReservationService.createReservation(1L, 1L, expirationDate)).thenReturn(reservation);
 
         mockMvc.perform(post("/api/reservations/add")
@@ -110,7 +110,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void createReservation_Error() throws Exception {
+    void createReservation_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas tworzenia rezerwacji
         when(bookReservationService.createReservation(1L, 1L, expirationDate))
                 .thenThrow(new IllegalStateException("Book is not available for reservation"));
 
@@ -125,7 +125,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void getReservationById_Success() throws Exception {
+    void getReservationById_Success() throws Exception { // sprawdzenie czy pobiera rezerwację po ID
         when(bookReservationService.findById(1L)).thenReturn(Optional.of(reservation));
 
         mockMvc.perform(get("/api/reservations/get/1"))
@@ -138,7 +138,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void getReservationById_NotFound() throws Exception {
+    void getReservationById_NotFound() throws Exception { // sprawdzenie czy obsługuje brak rezerwacji o podanym ID
         when(bookReservationService.findById(999L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/reservations/get/999"))
@@ -149,7 +149,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void getReservationsByUser_Success() throws Exception {
+    void getReservationsByUser_Success() throws Exception { // sprawdzenie czy pobiera rezerwacje użytkownika
         when(userService.findById(1L)).thenReturn(Optional.of(user));
         when(bookReservationService.findByUser(user)).thenReturn(Collections.singletonList(reservation));
 
@@ -165,7 +165,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void getReservationsByUser_UserNotFound() throws Exception {
+    void getReservationsByUser_UserNotFound() throws Exception { // sprawdzenie czy obsługuje brak użytkownika przy pobieraniu rezerwacji
         when(userService.findById(999L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/reservations/get_user/999"))
@@ -178,7 +178,7 @@ public class BookReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getReservationsByBook_Success() throws Exception {
+    void getReservationsByBook_Success() throws Exception { // sprawdzenie czy pobiera rezerwacje dla książki
         when(bookService.findById(1L)).thenReturn(Optional.of(book));
         when(bookReservationService.findByBook(book)).thenReturn(Collections.singletonList(reservation));
 
@@ -194,7 +194,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void getActiveReservationsByUser_Success() throws Exception {
+    void getActiveReservationsByUser_Success() throws Exception { // sprawdzenie czy pobiera aktywne rezerwacje użytkownika
         when(userService.findById(1L)).thenReturn(Optional.of(user));
         when(bookReservationService.findActiveReservationsByUser(user)).thenReturn(Collections.singletonList(reservation));
 
@@ -210,7 +210,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void getActiveReservationsByUser_UserNotFound() throws Exception {
+    void getActiveReservationsByUser_UserNotFound() throws Exception { // sprawdzenie czy obsługuje brak użytkownika przy pobieraniu aktywnych rezerwacji
         when(userService.findById(999L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/reservations/active_user/999"))
@@ -223,7 +223,7 @@ public class BookReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getActiveReservationsByBook_Success() throws Exception {
+    void getActiveReservationsByBook_Success() throws Exception { // sprawdzenie czy pobiera aktywne rezerwacje dla książki
         when(bookService.findById(1L)).thenReturn(Optional.of(book));
         when(bookReservationService.findActiveReservationsByBook(book)).thenReturn(Collections.singletonList(reservation));
 
@@ -240,7 +240,7 @@ public class BookReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getActiveReservationsByBook_BookNotFound() throws Exception {
+    void getActiveReservationsByBook_BookNotFound() throws Exception { // sprawdzenie czy obsługuje brak książki przy pobieraniu aktywnych rezerwacji
         when(bookService.findById(999L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/reservations/active_book/999"))
@@ -253,7 +253,7 @@ public class BookReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getAllReservations() throws Exception {
+    void getAllReservations() throws Exception { // sprawdzenie czy pobiera wszystkie rezerwacje
         when(bookReservationService.findAllReservations()).thenReturn(Collections.singletonList(reservation));
 
         mockMvc.perform(get("/api/reservations/all"))
@@ -266,7 +266,7 @@ public class BookReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getActiveReservations() throws Exception {
+    void getActiveReservations() throws Exception { // sprawdzenie czy pobiera aktywne rezerwacje
         when(bookReservationService.findAllReservations()).thenReturn(Collections.singletonList(reservation));
 
         mockMvc.perform(get("/api/reservations/active"))
@@ -280,7 +280,7 @@ public class BookReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getExpiredReservations() throws Exception {
+    void getExpiredReservations() throws Exception { // sprawdzenie czy pobiera wygasłe rezerwacje
         when(bookReservationService.findExpiredReservations()).thenReturn(Collections.singletonList(reservation));
 
         mockMvc.perform(get("/api/reservations/expired"))
@@ -292,7 +292,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void cancelReservation_Success() throws Exception {
+    void cancelReservation_Success() throws Exception { // sprawdzenie czy anuluje rezerwację
         doNothing().when(bookReservationService).cancelReservation(1L);
 
         mockMvc.perform(post("/api/reservations/cancel/1"))
@@ -302,7 +302,7 @@ public class BookReservationControllerTest {
     }
 
     @Test
-    void cancelReservation_Error() throws Exception {
+    void cancelReservation_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas anulowania rezerwacji
         doThrow(new IllegalArgumentException("Reservation not found")).when(bookReservationService).cancelReservation(999L);
 
         mockMvc.perform(post("/api/reservations/cancel/999"))
@@ -314,7 +314,7 @@ public class BookReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void processExpiredReservations_Success() throws Exception {
+    void processExpiredReservations_Success() throws Exception { // sprawdzenie czy przetwarza wygasłe rezerwacje
         doNothing().when(bookReservationService).processExpiredReservations();
 
         mockMvc.perform(post("/api/reservations/process_expired"))
@@ -325,7 +325,7 @@ public class BookReservationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void processExpiredReservations_Error() throws Exception {
+    void processExpiredReservations_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas przetwarzania wygasłych rezerwacji
         doThrow(new RuntimeException("Error processing expired reservations")).when(bookReservationService).processExpiredReservations();
 
         mockMvc.perform(post("/api/reservations/process_expired"))

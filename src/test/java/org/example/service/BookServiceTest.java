@@ -49,7 +49,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void addBook_WithAvailableQuantity() {
+    void addBook_WithAvailableQuantity() { // sprawdzenie czy dodaje książkę z określoną dostępną ilością
         when(bookRepository.save(any(Book.class))).thenReturn(book);
 
         Book result = bookService.addBook(book);
@@ -60,7 +60,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void addBook_WithoutAvailableQuantity() {
+    void addBook_WithoutAvailableQuantity() { // sprawdzenie czy dodaje książkę bez określonej dostępnej ilości
         Book bookWithoutAvailableQuantity = Book.builder()
                 .id(1L)
                 .title("Test Book")
@@ -89,7 +89,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void findById_Success() {
+    void findById_Success() { // sprawdzenie czy znajduje książkę po ID
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
         Optional<Book> result = bookService.findById(1L);
@@ -99,7 +99,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void findById_NotFound() {
+    void findById_NotFound() { // sprawdzenie czy obsługuje brak książki o podanym ID
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
 
         Optional<Book> result = bookService.findById(1L);
@@ -108,7 +108,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void findAllBooks_Success() {
+    void findAllBooks_Success() { // sprawdzenie czy pobiera wszystkie książki
         List<Book> books = Arrays.asList(
                 book,
                 Book.builder()
@@ -128,7 +128,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void findByTitle_Success() {
+    void findByTitle_Success() { // sprawdzenie czy wyszukuje książki po tytule
         List<Book> books = List.of(book);
         when(bookRepository.findByTitle("Test Book")).thenReturn(books);
 
@@ -139,7 +139,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void findByAuthor_Success() {
+    void findByAuthor_Success() { // sprawdzenie czy wyszukuje książki po autorze
         List<Book> books = List.of(book);
         when(bookRepository.findByAuthor("Test Author")).thenReturn(books);
 
@@ -150,7 +150,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void findAvailableBooks_Success() {
+    void findAvailableBooks_Success() { // sprawdzenie czy pobiera dostępne książki
         List<Book> availableBooks = List.of(book);
         when(bookRepository.findAllAvailableBooks()).thenReturn(availableBooks);
 
@@ -161,7 +161,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void updateBook_Success() {
+    void updateBook_Success() { // sprawdzenie czy aktualizuje książkę
         Book updatedBook = Book.builder()
                 .id(1L)
                 .title("Updated Title")
@@ -183,7 +183,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void updateBook_NotFound() {
+    void updateBook_NotFound() { // sprawdzenie czy obsługuje brak książki podczas aktualizacji
         when(bookRepository.existsById(1L)).thenReturn(false);
 
         IllegalArgumentException exception = assertThrows(
@@ -196,7 +196,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void updateBook_AdjustAvailableQuantity() {
+    void updateBook_AdjustAvailableQuantity() { // sprawdzenie czy dostosowuje dostępną ilość podczas aktualizacji
         Book bookWithExcessiveAvailableQuantity = Book.builder()
                 .id(1L)
                 .title("Test Book")
@@ -226,7 +226,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void deleteBook_Success() {
+    void deleteBook_Success() { // sprawdzenie czy usuwa książkę
         doNothing().when(bookRepository).deleteById(1L);
 
         bookService.deleteBook(1L);
@@ -235,7 +235,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void isBookAvailable_True() {
+    void isBookAvailable_True() { // sprawdzenie czy książka jest dostępna
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
         boolean result = bookService.isBookAvailable(1L);
@@ -244,7 +244,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void isBookAvailable_False() {
+    void isBookAvailable_False() { // sprawdzenie czy książka jest niedostępna
         Book unavailableBook = Book.builder()
                 .id(1L)
                 .title("Test Book")
@@ -262,7 +262,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void isBookAvailable_NotFound() {
+    void isBookAvailable_NotFound() { // sprawdzenie czy obsługuje brak książki przy sprawdzaniu dostępności
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(
@@ -274,7 +274,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void getAvailableQuantity_Success() {
+    void getAvailableQuantity_Success() { // sprawdzenie czy pobiera dostępną ilość książek
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
         int result = bookService.getAvailableQuantity(1L);
@@ -283,7 +283,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void getAvailableQuantity_NotFound() {
+    void getAvailableQuantity_NotFound() { // sprawdzenie czy obsługuje brak książki przy pobieraniu dostępnej ilości
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(

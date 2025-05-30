@@ -38,13 +38,13 @@ public class BookLoanTest {
     }
 
     @Test
-    public void testBookLoanCreation() {
+    public void testBookLoanCreation() { // sprawdzenie czy obiekt BookLoan tworzy się poprawnie
         BookLoan bookLoan = new BookLoan();
         assertNotNull(bookLoan);
     }
 
     @Test
-    public void testBookLoanBuilder() {
+    public void testBookLoanBuilder() { // sprawdzenie czy builder poprawnie tworzy obiekt BookLoan
         BookLoan bookLoan = BookLoan.builder()
                 .id(1L)
                 .user(user)
@@ -54,7 +54,7 @@ public class BookLoanTest {
                 .returnDate(returnDate)
                 .returned(true)
                 .build();
-        
+
         assertEquals(1L, bookLoan.getId());
         assertEquals(user, bookLoan.getUser());
         assertEquals(book, bookLoan.getBook());
@@ -65,7 +65,7 @@ public class BookLoanTest {
     }
 
     @Test
-    public void testBookLoanGettersAndSetters() {
+    public void testBookLoanGettersAndSetters() { // sprawdzenie czy gettery i settery działają poprawnie
         BookLoan bookLoan = new BookLoan();
         bookLoan.setId(1L);
         bookLoan.setUser(user);
@@ -74,7 +74,7 @@ public class BookLoanTest {
         bookLoan.setDueDate(dueDate);
         bookLoan.setReturnDate(returnDate);
         bookLoan.setReturned(true);
-        
+
         assertEquals(1L, bookLoan.getId());
         assertEquals(user, bookLoan.getUser());
         assertEquals(book, bookLoan.getBook());
@@ -85,7 +85,7 @@ public class BookLoanTest {
     }
 
     @Test
-    public void testBookLoanEqualsAndHashCode() {
+    public void testBookLoanEqualsAndHashCode() { // sprawdzenie czy metody equals i hashCode działają poprawnie
         BookLoan bookLoan1 = BookLoan.builder()
                 .id(1L)
                 .user(user)
@@ -95,7 +95,7 @@ public class BookLoanTest {
                 .returnDate(returnDate)
                 .returned(true)
                 .build();
-        
+
         BookLoan bookLoan2 = BookLoan.builder()
                 .id(1L)
                 .user(user)
@@ -105,7 +105,7 @@ public class BookLoanTest {
                 .returnDate(returnDate)
                 .returned(true)
                 .build();
-        
+
         BookLoan bookLoan3 = BookLoan.builder()
                 .id(2L)
                 .user(user)
@@ -115,7 +115,7 @@ public class BookLoanTest {
                 .returnDate(null)
                 .returned(false)
                 .build();
-        
+
         assertEquals(bookLoan1, bookLoan2);
         assertEquals(bookLoan1.hashCode(), bookLoan2.hashCode());
         assertNotEquals(bookLoan1, bookLoan3);
@@ -123,7 +123,7 @@ public class BookLoanTest {
     }
 
     @Test
-    public void testBookLoanToString() {
+    public void testBookLoanToString() { // sprawdzenie czy metoda toString zwraca poprawny ciąg znaków
         BookLoan bookLoan = BookLoan.builder()
                 .id(1L)
                 .user(user)
@@ -133,9 +133,9 @@ public class BookLoanTest {
                 .returnDate(returnDate)
                 .returned(true)
                 .build();
-        
+
         String toString = bookLoan.toString();
-        
+
         assertTrue(toString.contains("id=1"));
         assertTrue(toString.contains("user=" + user.toString()));
         assertTrue(toString.contains("book=" + book.toString()));
@@ -146,9 +146,9 @@ public class BookLoanTest {
     }
 
     @Test
-    public void testBookLoanAllArgsConstructor() {
+    public void testBookLoanAllArgsConstructor() { // sprawdzenie czy konstruktor z wszystkimi argumentami działa poprawnie
         BookLoan bookLoan = new BookLoan(1L, user, book, loanDate, dueDate, returnDate, true);
-        
+
         assertEquals(1L, bookLoan.getId());
         assertEquals(user, bookLoan.getUser());
         assertEquals(book, bookLoan.getBook());

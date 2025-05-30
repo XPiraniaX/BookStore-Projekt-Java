@@ -25,7 +25,7 @@ public class SecurityConfigTest {
     }
 
     @Test
-    public void testPasswordEncoder() {
+    public void testPasswordEncoder() { // sprawdzenie czy encoder haseł działa poprawnie
         PasswordEncoder encoder = securityConfig.passwordEncoder();
         assertNotNull(encoder);
         assertTrue(encoder instanceof BCryptPasswordEncoder);
@@ -37,7 +37,7 @@ public class SecurityConfigTest {
     }
 
     @Test
-    public void testSecurityConfigCreation() {
+    public void testSecurityConfigCreation() { // sprawdzenie czy obiekt SecurityConfig tworzy się poprawnie
         assertNotNull(securityConfig);
     }
 }

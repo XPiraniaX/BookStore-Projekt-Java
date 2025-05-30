@@ -58,7 +58,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void registerUser_Success() throws Exception {
+    void registerUser_Success() throws Exception { // sprawdzenie czy rejestruje użytkownika
         User inputUser = User.builder()
                 .username("newUser")
                 .password("newPass")
@@ -89,7 +89,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void registerUser_Error() throws Exception {
+    void registerUser_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas rejestracji użytkownika
         User inputUser = User.builder()
                 .username("existingUser")
                 .password("password")
@@ -109,7 +109,7 @@ public class AuthControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void registerAdmin_Success() throws Exception {
+    void registerAdmin_Success() throws Exception { // sprawdzenie czy rejestruje administratora
         User inputAdmin = User.builder()
                 .username("newAdmin")
                 .password("adminPass")
@@ -141,7 +141,7 @@ public class AuthControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void registerAdmin_Error() throws Exception {
+    void registerAdmin_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas rejestracji administratora
         User inputAdmin = User.builder()
                 .username("existingAdmin")
                 .password("adminPass")
@@ -160,7 +160,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void getCurrentUser() throws Exception {
+    void getCurrentUser() throws Exception { // sprawdzenie czy pobiera informacje o bieżącym użytkowniku
         mockMvc.perform(get("/api/auth/me"))
                 .andExpect(status().isOk());
     }

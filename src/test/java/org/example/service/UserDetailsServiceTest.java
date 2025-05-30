@@ -42,7 +42,7 @@ public class UserDetailsServiceTest {
     }
 
     @Test
-    void loadUserByUsername_Success() {
+    void loadUserByUsername_Success() { // sprawdzenie czy poprawnie ładuje dane użytkownika
         // Arrange
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
 
@@ -53,16 +53,16 @@ public class UserDetailsServiceTest {
         assertNotNull(userDetails);
         assertEquals("testUser", userDetails.getUsername());
         assertEquals("password123", userDetails.getPassword());
-        
+
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         assertEquals(1, authorities.size());
         assertTrue(authorities.contains(new SimpleGrantedAuthority("ROLE_USER")));
-        
+
         verify(userRepository).findByUsername("testUser");
     }
 
     @Test
-    void loadUserByUsername_UserNotFound() {
+    void loadUserByUsername_UserNotFound() { // sprawdzenie czy obsługuje brak użytkownika o podanej nazwie
         // Arrange
         when(userRepository.findByUsername("nonExistentUser")).thenReturn(Optional.empty());
 
@@ -71,13 +71,13 @@ public class UserDetailsServiceTest {
                 UsernameNotFoundException.class,
                 () -> userDetailsService.loadUserByUsername("nonExistentUser")
         );
-        
+
         assertEquals("User not found with username: nonExistentUser", exception.getMessage());
         verify(userRepository).findByUsername("nonExistentUser");
     }
 
     @Test
-    void loadUserByUsername_AdminRole() {
+    void loadUserByUsername_AdminRole() { // sprawdzenie czy poprawnie ładuje dane administratora
         // Arrange
         User adminUser = User.builder()
                 .id(2L)
@@ -86,7 +86,7 @@ public class UserDetailsServiceTest {
                 .email("admin@example.com")
                 .role(User.Role.ADMIN)
                 .build();
-        
+
         when(userRepository.findByUsername("adminUser")).thenReturn(Optional.of(adminUser));
 
         // Act
@@ -96,11 +96,11 @@ public class UserDetailsServiceTest {
         assertNotNull(userDetails);
         assertEquals("adminUser", userDetails.getUsername());
         assertEquals("adminPass", userDetails.getPassword());
-        
+
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         assertEquals(1, authorities.size());
         assertTrue(authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
-        
+
         verify(userRepository).findByUsername("adminUser");
     }
 }

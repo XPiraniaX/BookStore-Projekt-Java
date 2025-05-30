@@ -69,7 +69,7 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void addBook_Success() throws Exception {
+    void addBook_Success() throws Exception { // sprawdzenie czy dodaje książkę
         when(bookService.addBook(any(Book.class))).thenReturn(book);
 
         mockMvc.perform(post("/api/books/add")
@@ -85,7 +85,7 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void addBook_Error() throws Exception {
+    void addBook_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas dodawania książki
         when(bookService.addBook(any(Book.class))).thenThrow(new IllegalArgumentException("Invalid book data"));
 
         mockMvc.perform(post("/api/books/add")
@@ -98,7 +98,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getBookById_Success() throws Exception {
+    void getBookById_Success() throws Exception { // sprawdzenie czy pobiera książkę po ID
         when(bookService.findById(1L)).thenReturn(Optional.of(book));
 
         mockMvc.perform(get("/api/books/get/1"))
@@ -111,7 +111,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getAllBooks() throws Exception {
+    void getAllBooks() throws Exception { // sprawdzenie czy pobiera wszystkie książki
         when(bookService.findAllBooks()).thenReturn(books);
 
         mockMvc.perform(get("/api/books/all"))
@@ -126,7 +126,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getAvailableBooks() throws Exception {
+    void getAvailableBooks() throws Exception { // sprawdzenie czy pobiera dostępne książki
         when(bookService.findAvailableBooks()).thenReturn(books);
 
         mockMvc.perform(get("/api/books/available"))
@@ -141,7 +141,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getBooksByTitle() throws Exception {
+    void getBooksByTitle() throws Exception { // sprawdzenie czy wyszukuje książki po tytule
         when(bookService.findByTitle("Test Book")).thenReturn(List.of(book));
 
         mockMvc.perform(get("/api/books/get_title/Test Book"))
@@ -154,7 +154,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getBooksByAuthor() throws Exception {
+    void getBooksByAuthor() throws Exception { // sprawdzenie czy wyszukuje książki po autorze
         when(bookService.findByAuthor("Test Author")).thenReturn(List.of(book));
 
         mockMvc.perform(get("/api/books/get_author/Test Author"))
@@ -168,7 +168,7 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void updateBook_Success() throws Exception {
+    void updateBook_Success() throws Exception { // sprawdzenie czy aktualizuje książkę
         when(bookService.updateBook(any(Book.class))).thenReturn(book);
 
         mockMvc.perform(put("/api/books/update/1")
@@ -183,7 +183,7 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void updateBook_NotFound() throws Exception {
+    void updateBook_NotFound() throws Exception { // sprawdzenie czy obsługuje brak książki podczas aktualizacji
         when(bookService.updateBook(any(Book.class))).thenThrow(new IllegalArgumentException("Book not found"));
 
         mockMvc.perform(put("/api/books/update/999")
@@ -197,7 +197,7 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void deleteBook_Success() throws Exception {
+    void deleteBook_Success() throws Exception { // sprawdzenie czy usuwa książkę
         doNothing().when(bookService).deleteBook(1L);
 
         mockMvc.perform(delete("/api/books/delete/1"))
@@ -208,7 +208,7 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void deleteBook_Error() throws Exception {
+    void deleteBook_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas usuwania książki
         doThrow(new RuntimeException("Error deleting book")).when(bookService).deleteBook(999L);
 
         mockMvc.perform(delete("/api/books/delete/999"))
@@ -219,7 +219,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void isBookAvailable_True() throws Exception {
+    void isBookAvailable_True() throws Exception { // sprawdzenie czy książka jest dostępna
         when(bookService.isBookAvailable(1L)).thenReturn(true);
 
         mockMvc.perform(get("/api/books/available_id/1"))
@@ -230,7 +230,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void isBookAvailable_False() throws Exception {
+    void isBookAvailable_False() throws Exception { // sprawdzenie czy książka jest niedostępna
         when(bookService.isBookAvailable(2L)).thenReturn(false);
 
         mockMvc.perform(get("/api/books/available_id/2"))
@@ -241,7 +241,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void isBookAvailable_NotFound() throws Exception {
+    void isBookAvailable_NotFound() throws Exception { // sprawdzenie czy obsługuje brak książki przy sprawdzaniu dostępności
         when(bookService.isBookAvailable(999L)).thenThrow(new IllegalArgumentException("Book not found"));
 
         mockMvc.perform(get("/api/books/available_id/999"))
@@ -252,7 +252,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getAvailableQuantity_Success() throws Exception {
+    void getAvailableQuantity_Success() throws Exception { // sprawdzenie czy pobiera dostępną ilość książek
         when(bookService.getAvailableQuantity(1L)).thenReturn(5);
 
         mockMvc.perform(get("/api/books/quantity/1"))
@@ -263,7 +263,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getAvailableQuantity_NotFound() throws Exception {
+    void getAvailableQuantity_NotFound() throws Exception { // sprawdzenie czy obsługuje brak książki przy pobieraniu dostępnej ilości
         when(bookService.getAvailableQuantity(999L)).thenThrow(new IllegalArgumentException("Book not found"));
 
         mockMvc.perform(get("/api/books/quantity/999"))

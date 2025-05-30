@@ -91,7 +91,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void createLoan_Success() {
+    void createLoan_Success() { // sprawdzenie czy tworzy wypożyczenie
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         when(bookLoanRepository.findByUserAndReturned(user, false)).thenReturn(Collections.emptyList());
@@ -112,7 +112,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void createLoan_UserNotFound() {
+    void createLoan_UserNotFound() { // sprawdzenie czy obsługuje brak użytkownika podczas tworzenia wypożyczenia
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(
@@ -126,7 +126,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void createLoan_BookNotFound() {
+    void createLoan_BookNotFound() { // sprawdzenie czy obsługuje brak książki podczas tworzenia wypożyczenia
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -141,7 +141,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void createLoan_BookNotAvailable() {
+    void createLoan_BookNotAvailable() { // sprawdzenie czy obsługuje niedostępność książki podczas tworzenia wypożyczenia
         Book unavailableBook = Book.builder()
                 .id(1L)
                 .title("Test Book")
@@ -164,7 +164,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void createLoan_UserAlreadyHasActiveLoan() {
+    void createLoan_UserAlreadyHasActiveLoan() { // sprawdzenie czy obsługuje sytuację gdy użytkownik ma już aktywne wypożyczenie
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         when(bookLoanRepository.findByUserAndReturned(user, false)).thenReturn(List.of(loan));
@@ -181,7 +181,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void createLoan_BookReservedByOthers() {
+    void createLoan_BookReservedByOthers() { // sprawdzenie czy obsługuje sytuację gdy książka jest zarezerwowana przez innych
         User otherUser = User.builder()
                 .id(2L)
                 .username("otherUser")
@@ -215,7 +215,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void createLoan_WithUserReservation() {
+    void createLoan_WithUserReservation() { // sprawdzenie czy tworzy wypożyczenie z rezerwacją użytkownika
         BookReservation userReservation = BookReservation.builder()
                 .id(1L)
                 .user(user)
@@ -241,7 +241,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findById_Success() {
+    void findById_Success() { // sprawdzenie czy znajduje wypożyczenie po ID
         when(bookLoanRepository.findById(1L)).thenReturn(Optional.of(loan));
 
         Optional<BookLoan> result = bookLoanService.findById(1L);
@@ -251,7 +251,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findById_NotFound() {
+    void findById_NotFound() { // sprawdzenie czy obsługuje brak wypożyczenia o podanym ID
         when(bookLoanRepository.findById(1L)).thenReturn(Optional.empty());
 
         Optional<BookLoan> result = bookLoanService.findById(1L);
@@ -260,7 +260,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findByUser_Success() {
+    void findByUser_Success() { // sprawdzenie czy znajduje wypożyczenia użytkownika
         List<BookLoan> loans = List.of(loan);
         when(bookLoanRepository.findByUser(user)).thenReturn(loans);
 
@@ -270,7 +270,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findByBook_Success() {
+    void findByBook_Success() { // sprawdzenie czy znajduje wypożyczenia książki
         List<BookLoan> loans = List.of(loan);
         when(bookLoanRepository.findByBook(book)).thenReturn(loans);
 
@@ -280,7 +280,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findActiveLoans_Success() {
+    void findActiveLoans_Success() { // sprawdzenie czy znajduje aktywne wypożyczenia
         BookLoan returnedLoan = BookLoan.builder()
                 .id(2L)
                 .user(user)
@@ -301,7 +301,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findActiveLoansForUser_Success() {
+    void findActiveLoansForUser_Success() { // sprawdzenie czy znajduje aktywne wypożyczenia użytkownika
         List<BookLoan> loans = List.of(loan);
         when(bookLoanRepository.findByUserAndReturned(user, false)).thenReturn(loans);
 
@@ -311,7 +311,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findActiveLoansForBook_Success() {
+    void findActiveLoansForBook_Success() { // sprawdzenie czy znajduje aktywne wypożyczenia książki
         List<BookLoan> loans = List.of(loan);
         when(bookLoanRepository.findByBookAndReturned(book, false)).thenReturn(loans);
 
@@ -321,7 +321,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findAllLoans_Success() {
+    void findAllLoans_Success() { // sprawdzenie czy znajduje wszystkie wypożyczenia
         List<BookLoan> loans = List.of(loan);
         when(bookLoanRepository.findAll()).thenReturn(loans);
 
@@ -331,7 +331,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void findOverdueLoans_Success() {
+    void findOverdueLoans_Success() { // sprawdzenie czy znajduje przeterminowane wypożyczenia
         List<BookLoan> loans = List.of(loan);
         when(bookLoanRepository.findOverdueLoans(any(LocalDateTime.class))).thenReturn(loans);
 
@@ -341,7 +341,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void returnBook_Success() {
+    void returnBook_Success() { // sprawdzenie czy zwraca wypożyczoną książkę
         when(bookLoanRepository.findById(1L)).thenReturn(Optional.of(loan));
         when(bookLoanRepository.save(any(BookLoan.class))).thenReturn(loan);
 
@@ -355,7 +355,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void returnBook_NotFound() {
+    void returnBook_NotFound() { // sprawdzenie czy obsługuje brak wypożyczenia podczas zwrotu
         when(bookLoanRepository.findById(1L)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(
@@ -369,7 +369,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void returnBook_AlreadyReturned() {
+    void returnBook_AlreadyReturned() { // sprawdzenie czy obsługuje próbę zwrotu już zwróconej książki
         BookLoan returnedLoan = BookLoan.builder()
                 .id(1L)
                 .user(user)
@@ -393,7 +393,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void hasActiveLoan_True() {
+    void hasActiveLoan_True() { // sprawdzenie czy wykrywa aktywne wypożyczenie
         when(bookLoanRepository.findByUserAndReturned(user, false)).thenReturn(List.of(loan));
         when(bookLoanRepository.findByBookAndReturned(book, false)).thenReturn(List.of(loan));
 
@@ -403,7 +403,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void hasActiveLoan_False_NoUserLoans() {
+    void hasActiveLoan_False_NoUserLoans() { // sprawdzenie czy obsługuje brak aktywnych wypożyczeń użytkownika
         when(bookLoanRepository.findByUserAndReturned(user, false)).thenReturn(Collections.emptyList());
 
         boolean result = bookLoanService.hasActiveLoan(user, book);
@@ -412,7 +412,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void hasActiveLoan_False_NoBookLoans() {
+    void hasActiveLoan_False_NoBookLoans() { // sprawdzenie czy obsługuje brak aktywnych wypożyczeń książki
         when(bookLoanRepository.findByUserAndReturned(user, false)).thenReturn(List.of(loan));
         when(bookLoanRepository.findByBookAndReturned(book, false)).thenReturn(Collections.emptyList());
 
@@ -422,7 +422,7 @@ public class BookLoanServiceTest {
     }
 
     @Test
-    void countActiveLoans_Success() {
+    void countActiveLoans_Success() { // sprawdzenie czy poprawnie zlicza aktywne wypożyczenia
         when(bookLoanRepository.countActiveLoans(book)).thenReturn(3L);
 
         long result = bookLoanService.countActiveLoans(book);

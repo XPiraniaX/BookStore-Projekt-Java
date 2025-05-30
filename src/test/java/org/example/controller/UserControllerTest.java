@@ -70,7 +70,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getUserById_Success() throws Exception {
+    void getUserById_Success() throws Exception { // sprawdzenie czy pobiera użytkownika po ID
         when(userService.findById(1L)).thenReturn(Optional.of(user));
 
         mockMvc.perform(get("/api/users/get/1"))
@@ -86,7 +86,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getUserById_NotFound() throws Exception {
+    void getUserById_NotFound() throws Exception { // sprawdzenie czy obsługuje brak użytkownika o podanym ID
         when(userService.findById(999L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/users/get/999"))
@@ -98,7 +98,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getUserByUsername_Success() throws Exception {
+    void getUserByUsername_Success() throws Exception { // sprawdzenie czy pobiera użytkownika po nazwie użytkownika
         when(userService.findByUsername("testUser")).thenReturn(Optional.of(user));
 
         mockMvc.perform(get("/api/users/get_username/testUser"))
@@ -114,7 +114,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getUserByUsername_NotFound() throws Exception {
+    void getUserByUsername_NotFound() throws Exception { // sprawdzenie czy obsługuje brak użytkownika o podanej nazwie
         when(userService.findByUsername("nonExistentUser")).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/users/get_username/nonExistentUser"))
@@ -126,7 +126,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getAllUsers() throws Exception {
+    void getAllUsers() throws Exception { // sprawdzenie czy pobiera wszystkich użytkowników
         when(userService.findAllUsers()).thenReturn(users);
 
         mockMvc.perform(get("/api/users/all"))
@@ -144,7 +144,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void updateUser_Success() throws Exception {
+    void updateUser_Success() throws Exception { // sprawdzenie czy aktualizuje użytkownika
         User updatedUser = User.builder()
                 .id(1L)
                 .username("updatedUser")
@@ -170,7 +170,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void deleteUser_Success() throws Exception {
+    void deleteUser_Success() throws Exception { // sprawdzenie czy usuwa użytkownika
         doNothing().when(userService).deleteUser(1L);
 
         mockMvc.perform(delete("/api/users/delete/1"))
@@ -181,7 +181,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void deleteUser_Error() throws Exception {
+    void deleteUser_Error() throws Exception { // sprawdzenie czy obsługuje błąd podczas usuwania użytkownika
         doThrow(new RuntimeException("Error deleting user")).when(userService).deleteUser(999L);
 
         mockMvc.perform(delete("/api/users/delete/999"))
@@ -193,7 +193,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void existsByUsername_True() throws Exception {
+    void existsByUsername_True() throws Exception { // sprawdzenie czy istnieje użytkownik o podanej nazwie
         when(userService.existsByUsername("testUser")).thenReturn(true);
 
         mockMvc.perform(get("/api/users/exists_username/testUser"))
@@ -205,7 +205,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void existsByUsername_False() throws Exception {
+    void existsByUsername_False() throws Exception { // sprawdzenie czy nie istnieje użytkownik o podanej nazwie
         when(userService.existsByUsername("nonExistentUser")).thenReturn(false);
 
         mockMvc.perform(get("/api/users/exists_username/nonExistentUser"))
@@ -217,7 +217,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void existsByEmail_True() throws Exception {
+    void existsByEmail_True() throws Exception { // sprawdzenie czy istnieje użytkownik o podanym adresie email
         when(userService.existsByEmail("test@example.com")).thenReturn(true);
 
         mockMvc.perform(get("/api/users/exists_email/test@example.com"))
@@ -229,7 +229,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void existsByEmail_False() throws Exception {
+    void existsByEmail_False() throws Exception { // sprawdzenie czy nie istnieje użytkownik o podanym adresie email
         when(userService.existsByEmail("nonexistent@example.com")).thenReturn(false);
 
         mockMvc.perform(get("/api/users/exists_email/nonexistent@example.com"))

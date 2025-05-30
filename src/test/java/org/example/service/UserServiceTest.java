@@ -45,7 +45,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void registerUser_Success() {
+    void registerUser_Success() { // sprawdzenie czy rejestruje użytkownika
         when(userRepository.existsByUsername("testUser")).thenReturn(false);
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
         when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
@@ -60,7 +60,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void registerUser_UsernameExists() {
+    void registerUser_UsernameExists() { // sprawdzenie czy obsługuje istniejącą nazwę użytkownika podczas rejestracji
         when(userRepository.existsByUsername("testUser")).thenReturn(true);
 
         IllegalArgumentException exception = assertThrows(
@@ -73,7 +73,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void registerUser_EmailExists() {
+    void registerUser_EmailExists() { // sprawdzenie czy obsługuje istniejący email podczas rejestracji
         when(userRepository.existsByUsername("testUser")).thenReturn(false);
         when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
 
@@ -87,7 +87,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void registerUser_NullRole() {
+    void registerUser_NullRole() { // sprawdzenie czy ustawia domyślną rolę USER gdy rola jest null
         User userWithNullRole = User.builder()
                 .id(1L)
                 .username("testUser")
@@ -108,7 +108,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByUsername_Success() {
+    void findByUsername_Success() { // sprawdzenie czy znajduje użytkownika po nazwie użytkownika
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findByUsername("testUser");
@@ -118,7 +118,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByUsername_NotFound() {
+    void findByUsername_NotFound() { // sprawdzenie czy obsługuje brak użytkownika o podanej nazwie
         when(userRepository.findByUsername("nonExistentUser")).thenReturn(Optional.empty());
 
         Optional<User> result = userService.findByUsername("nonExistentUser");
@@ -127,7 +127,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findById_Success() {
+    void findById_Success() { // sprawdzenie czy znajduje użytkownika po ID
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findById(1L);
@@ -137,7 +137,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findById_NotFound() {
+    void findById_NotFound() { // sprawdzenie czy obsługuje brak użytkownika o podanym ID
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         Optional<User> result = userService.findById(999L);
@@ -146,7 +146,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findAllUsers_Success() {
+    void findAllUsers_Success() { // sprawdzenie czy pobiera wszystkich użytkowników
         User anotherUser = User.builder()
                 .id(2L)
                 .username("anotherUser")
@@ -165,7 +165,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser_WithNewPassword() {
+    void updateUser_WithNewPassword() { // sprawdzenie czy aktualizuje użytkownika z nowym hasłem
         User userToUpdate = User.builder()
                 .id(1L)
                 .username("updatedUser")
@@ -186,7 +186,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser_WithEmptyPassword() {
+    void updateUser_WithEmptyPassword() { // sprawdzenie czy zachowuje stare hasło przy pustym haśle
         User userToUpdate = User.builder()
                 .id(1L)
                 .username("updatedUser")
@@ -215,7 +215,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser_WithNullPassword() {
+    void updateUser_WithNullPassword() { // sprawdzenie czy zachowuje stare hasło przy null jako haśle
         User userToUpdate = User.builder()
                 .id(1L)
                 .username("updatedUser")
@@ -244,7 +244,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser_NotFound() {
+    void updateUser_NotFound() { // sprawdzenie czy obsługuje brak użytkownika podczas aktualizacji
         when(userRepository.existsById(1L)).thenReturn(false);
 
         IllegalArgumentException exception = assertThrows(
@@ -257,7 +257,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteUser_Success() {
+    void deleteUser_Success() { // sprawdzenie czy usuwa użytkownika
         doNothing().when(userRepository).deleteById(1L);
 
         userService.deleteUser(1L);
@@ -266,7 +266,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void existsByUsername_True() {
+    void existsByUsername_True() { // sprawdzenie czy wykrywa istniejącego użytkownika po nazwie
         when(userRepository.existsByUsername("testUser")).thenReturn(true);
 
         boolean result = userService.existsByUsername("testUser");
@@ -275,7 +275,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void existsByUsername_False() {
+    void existsByUsername_False() { // sprawdzenie czy wykrywa nieistniejącego użytkownika po nazwie
         when(userRepository.existsByUsername("nonExistentUser")).thenReturn(false);
 
         boolean result = userService.existsByUsername("nonExistentUser");
@@ -284,7 +284,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void existsByEmail_True() {
+    void existsByEmail_True() { // sprawdzenie czy wykrywa istniejącego użytkownika po emailu
         when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
 
         boolean result = userService.existsByEmail("test@example.com");
@@ -293,7 +293,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void existsByEmail_False() {
+    void existsByEmail_False() { // sprawdzenie czy wykrywa nieistniejącego użytkownika po emailu
         when(userRepository.existsByEmail("nonexistent@example.com")).thenReturn(false);
 
         boolean result = userService.existsByEmail("nonexistent@example.com");

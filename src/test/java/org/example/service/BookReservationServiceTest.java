@@ -74,7 +74,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void createReservation_Success() {
+    void createReservation_Success() { // sprawdzenie czy tworzy rezerwację
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         when(bookReservationRepository.findByUserAndActive(user, true)).thenReturn(List.of());
@@ -93,7 +93,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void createReservation_UserNotFound() {
+    void createReservation_UserNotFound() { // sprawdzenie czy obsługuje brak użytkownika podczas tworzenia rezerwacji
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(
@@ -107,7 +107,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void createReservation_BookNotFound() {
+    void createReservation_BookNotFound() { // sprawdzenie czy obsługuje brak książki podczas tworzenia rezerwacji
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -122,7 +122,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void createReservation_BookNotAvailable() {
+    void createReservation_BookNotAvailable() { // sprawdzenie czy obsługuje niedostępność książki podczas tworzenia rezerwacji
         Book unavailableBook = Book.builder()
                 .id(1L)
                 .title("Test Book")
@@ -145,7 +145,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void createReservation_UserAlreadyHasActiveReservation() {
+    void createReservation_UserAlreadyHasActiveReservation() { // sprawdzenie czy obsługuje sytuację gdy użytkownik ma już aktywną rezerwację
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         when(bookReservationRepository.findByUserAndActive(user, true)).thenReturn(List.of(reservation));
@@ -162,7 +162,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void findById_Success() {
+    void findById_Success() { // sprawdzenie czy znajduje rezerwację po ID
         when(bookReservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
 
         Optional<BookReservation> result = bookReservationService.findById(1L);
@@ -172,7 +172,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void findById_NotFound() {
+    void findById_NotFound() { // sprawdzenie czy obsługuje brak rezerwacji o podanym ID
         when(bookReservationRepository.findById(1L)).thenReturn(Optional.empty());
 
         Optional<BookReservation> result = bookReservationService.findById(1L);
@@ -181,7 +181,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void findByUser_Success() {
+    void findByUser_Success() { // sprawdzenie czy znajduje rezerwacje użytkownika
         List<BookReservation> reservations = List.of(reservation);
         when(bookReservationRepository.findByUser(user)).thenReturn(reservations);
 
@@ -191,7 +191,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void findByBook_Success() {
+    void findByBook_Success() { // sprawdzenie czy znajduje rezerwacje książki
         List<BookReservation> reservations = List.of(reservation);
         when(bookReservationRepository.findByBook(book)).thenReturn(reservations);
 
@@ -201,7 +201,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void findActiveReservationsByUser_Success() {
+    void findActiveReservationsByUser_Success() { // sprawdzenie czy znajduje aktywne rezerwacje użytkownika
         List<BookReservation> reservations = List.of(reservation);
         when(bookReservationRepository.findByUserAndActive(user, true)).thenReturn(reservations);
 
@@ -211,7 +211,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void findActiveReservationsByBook_Success() {
+    void findActiveReservationsByBook_Success() { // sprawdzenie czy znajduje aktywne rezerwacje książki
         List<BookReservation> reservations = List.of(reservation);
         when(bookReservationRepository.findByBookAndActive(book, true)).thenReturn(reservations);
 
@@ -221,7 +221,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void findAllReservations_Success() {
+    void findAllReservations_Success() { // sprawdzenie czy znajduje wszystkie rezerwacje
         List<BookReservation> reservations = List.of(reservation);
         when(bookReservationRepository.findAll()).thenReturn(reservations);
 
@@ -231,7 +231,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void findExpiredReservations_Success() {
+    void findExpiredReservations_Success() { // sprawdzenie czy znajduje wygasłe rezerwacje
         List<BookReservation> reservations = List.of(reservation);
         when(bookReservationRepository.findExpiredReservations(any(LocalDateTime.class))).thenReturn(reservations);
 
@@ -241,7 +241,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void cancelReservation_Success() {
+    void cancelReservation_Success() { // sprawdzenie czy anuluje rezerwację
         when(bookReservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
 
         bookReservationService.cancelReservation(1L);
@@ -253,7 +253,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void cancelReservation_NotFound() {
+    void cancelReservation_NotFound() { // sprawdzenie czy obsługuje brak rezerwacji podczas anulowania
         when(bookReservationRepository.findById(1L)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(
@@ -267,7 +267,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void cancelReservation_NotActive() {
+    void cancelReservation_NotActive() { // sprawdzenie czy obsługuje próbę anulowania nieaktywnej rezerwacji
         BookReservation inactiveReservation = BookReservation.builder()
                 .id(1L)
                 .user(user)
@@ -290,7 +290,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void processExpiredReservations_Success() {
+    void processExpiredReservations_Success() { // sprawdzenie czy przetwarza wygasłe rezerwacje
         BookReservation expiredReservation1 = BookReservation.builder()
                 .id(1L)
                 .user(user)
@@ -322,7 +322,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void hasActiveReservation_True() {
+    void hasActiveReservation_True() { // sprawdzenie czy wykrywa aktywną rezerwację
         when(bookReservationRepository.findByUserAndActive(user, true)).thenReturn(List.of(reservation));
         when(bookReservationRepository.findByBookAndActive(book, true)).thenReturn(List.of(reservation));
 
@@ -332,7 +332,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void hasActiveReservation_False_NoUserReservations() {
+    void hasActiveReservation_False_NoUserReservations() { // sprawdzenie czy obsługuje brak aktywnych rezerwacji użytkownika
         when(bookReservationRepository.findByUserAndActive(user, true)).thenReturn(List.of());
 
         boolean result = bookReservationService.hasActiveReservation(user, book);
@@ -341,7 +341,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void hasActiveReservation_False_NoBookReservations() {
+    void hasActiveReservation_False_NoBookReservations() { // sprawdzenie czy obsługuje brak aktywnych rezerwacji książki
         when(bookReservationRepository.findByUserAndActive(user, true)).thenReturn(List.of(reservation));
         when(bookReservationRepository.findByBookAndActive(book, true)).thenReturn(List.of());
 
@@ -351,7 +351,7 @@ public class BookReservationServiceTest {
     }
 
     @Test
-    void countActiveReservations_Success() {
+    void countActiveReservations_Success() { // sprawdzenie czy poprawnie zlicza aktywne rezerwacje
         when(bookReservationRepository.countActiveReservationsByBook(book)).thenReturn(3L);
 
         long result = bookReservationService.countActiveReservations(book);
