@@ -254,35 +254,7 @@ W projekcie zastosowano następujące wzorce projektowe:
 
 5. **Wzorzec MVC (Model-View-Controller)**: Zastosowany poprzez podział aplikacji na warstwy modelu (entity, repository), kontrolera (controller) i widoku (API REST).
 
-## XI.Uruchamianie Projektu
-
-1.  Pobranie repozytorum git
-
-```bash
-git clone https://github.com/XPiraniaX/BookStore-Projekt-Java
-```
-
-2. Uruchomienie przy pomocy Mavena
-
-```bash
-mvn clean package -DskipTests
-```
-
-3.  Połączenie z Dockerem
-
-```bash
-docker-decompose up --build
-```
-
-4.  Swagger
-
-[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
-
-5.  Wbudowani użytkownicy
-
-- 'user' / 'user' - standardowy użytkownik
-- 'admin' / 'admin' - administrator (wszystkie uprawnienia)
-## XII. Autoryzacja
+## XI. Autoryzacja
 
 Aplikacja implementuje kompleksowy system autoryzacji i uwierzytelniania użytkowników, zapewniający bezpieczny dostęp do zasobów systemu.
 
@@ -319,7 +291,34 @@ System definiuje dwa poziomy uprawnień:
    - Pozostałe endpointy wymagają uwierzytelnienia
 
 2. **Zabezpieczenia na poziomie metod** - Adnotacja `@PreAuthorize` jest używana do kontroli dostępu na poziomie poszczególnych metod, np. rejestracja nowego administratora wymaga roli ADMIN.
+## XII.Uruchamianie Projektu
 
+1.  Pobranie repozytorum git
+
+```bash
+git clone https://github.com/XPiraniaX/BookStore-Projekt-Java
+```
+
+2. Uruchomienie przy pomocy Mavena
+
+```bash
+mvn clean package -DskipTests
+```
+
+3.  Połączenie z Dockerem
+
+```bash
+docker-decompose up --build
+```
+
+4.  Swagger
+
+[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
+
+5.  Wbudowani użytkownicy
+
+- 'user' / 'user' - standardowy użytkownik
+- 'admin' / 'admin' - administrator (wszystkie uprawnienia)
 ## XIII.Testy
 
 Aplikacja zawiera kompleksowe testy dla wszystkich kontenerów, realizowane są za pomocą frameworku testowego Spring.
